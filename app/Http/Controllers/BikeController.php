@@ -68,8 +68,11 @@ class BikeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
-        //
+    {   
+        $bikes = Bike::findOrFail($id);
+        $categories = Category::all();
+
+        return view('bikeEdit', comapct('categories', 'bikes'));
     }
 
     /**
@@ -81,7 +84,15 @@ class BikeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $bike = Bike::find('id');
+        $bike->name = $request->name;
+        $bike->valore_noleggio = $request->valore_noleggio;
+        $bike->valore_acquisto = $request->valore_acquisto;
+        $bike->valore_vendita = $request->valore_vendita;
+        $bike->manutenzione = $request->manutenzione;
+        $bike->category_id = $request->category_id;
+        $bike->push();
+        return redirect()->route('bikeIndex', $bike);
     }
 
     /**

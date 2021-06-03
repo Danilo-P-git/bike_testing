@@ -25,3 +25,4 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/bike', 'App\Http\Controllers\BikeController@index')->name('bikeIndex');
 Route::get('/bike/create', 'App\Http\Controllers\BikeController@create')->name('bikeCreate');
 Route::post('/bike/store', 'App\Http\Controllers\BikeController@store')->name('bikeStore');
+Route::get('/bike/edit{$id}', 'App\Http\Controllers\BikeController@edit')->name('bikeEdit')
