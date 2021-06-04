@@ -29,6 +29,7 @@ class CreateContractsTable extends Migration
             $table->date('data_documento');
             $table->string('ente_documento');
             $table->string('residenza_temp');
+            $table->string('path')->nullable()->default(NULL);
             $table->timestamps();
         });
     }

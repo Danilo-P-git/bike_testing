@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Observers\ContractObserver;
 
 class Contract extends Model
 {
@@ -12,6 +13,10 @@ class Contract extends Model
 
     public function bike()
     {
-        return $this->hasMany(Bike::class);
+        return $this->belongsToMany(Bike::class);
+    }
+    public function photo()
+    {
+        return $this->hasMany(Photo::class);
     }
 }

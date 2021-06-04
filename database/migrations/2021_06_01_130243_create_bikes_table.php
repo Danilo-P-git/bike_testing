@@ -19,9 +19,11 @@ class CreateBikesTable extends Migration
             $table->float('valore_noleggio', 8, 2);
             $table->float('valore_acquisto', 8, 2);
             $table->float('valore_vendita', 8, 2);
+            $table->string('taglia')->default('M');
             $table->boolean('manutenzione');
-            $table->foreignId('contract_id')->nullable()->constrained();
+            // $table->foreignId('contract_id')->nullable()->constrained();
             $table->foreignId('category_id')->constrained();
+            $table->boolean('bloccata')->default(0);
             $table->timestamps();
         });
     }

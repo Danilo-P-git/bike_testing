@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Bike;
 use App\Models\Contract;
 use App\Models\Category;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -16,8 +17,13 @@ class BikeController extends Controller
      */
     public function index()
     {
+        $today = Carbon::now()->format('Y-m-d');
+        
         $bikes = Bike::all();
-        return view('bikeIndex', compact('bikes'));
+
+        // guarda l'observer 
+        // dd($contracts);
+        return view('bike.bikeIndex', compact('bikes', 'today'));
     }
 
     /**
@@ -28,7 +34,7 @@ class BikeController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('bikeCreate', compact('categories'));
+        return view('bike.bikeCreate', compact('categories'));
     }
 
     /**
@@ -72,7 +78,7 @@ class BikeController extends Controller
         $bikes = Bike::findOrFail($id);
         $categories = Category::all();
 
-        return view('bikeEdit', comapct('categories', 'bikes'));
+        return view('bike.bikeEdit', compact('categories', 'bikes'));
     }
 
     /**
@@ -84,15 +90,29 @@ class BikeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $bike = Bike::find('id');
+        $bike = Bike::find($id);
         $bike->name = $request->name;
         $bike->valore_noleggio = $request->valore_noleggio;
         $bike->valore_acquisto = $request->valore_acquisto;
         $bike->valore_vendita = $request->valore_vendita;
-        $bike->manutenzione = $request->manutenzione;
         $bike->category_id = $request->category_id;
         $bike->push();
         return redirect()->route('bikeIndex', $bike);
+    }
+
+    public function manutenzione(Request $request, $id)
+    {   
+        if ($request->manutenzione == 'on') {
+            $manutenzione = 1;
+        } else {
+            $manutenzione = 0;
+        }
+        $bike = Bike::find($id);
+        $bike->manutenzione = $manutenzione;
+        $bike->push();
+
+        return redirect()->route('bikeIndex', $bike);
+        
     }
 
     /**
@@ -103,6 +123,9 @@ class BikeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $bike = Bike::findOrFail($id);
+        $bike->delete();
+        return redirect()->route('bikeIndex', $bike);
+
     }
 }

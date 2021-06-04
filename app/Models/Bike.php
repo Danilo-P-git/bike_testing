@@ -26,7 +26,7 @@ class Bike extends Model
 
     public function contract()
     {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsToMany(Contract::class);
     }
     public function category()
     {
