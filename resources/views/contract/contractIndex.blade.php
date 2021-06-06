@@ -6,7 +6,9 @@
   <a class="btn btn-primary mx-auto my-4 p-3" href="{{route("contractCreate")}}">Crea un nuovo contratto</a>
 </div>
 <div class="container">
-
+    @if ($message = Session::get('message'))
+        {{$message}}
+    @endif
     <table class="table rounded shadow">
         <thead class="thead-dark">
           <tr>
@@ -18,11 +20,12 @@
             <th scope="col">Azioni</th>
 
 
+
           </tr>
         </thead>
         <tbody>
           @foreach ($contracts as $contract)
-              
+
           <tr>
             <td>{{$contract->id}}</td>
             <td>{{$contract->nome}}  {{$contract->cognome}}</td>
@@ -31,6 +34,8 @@
             <td>{{count($contract->bike)}}</td>
             <td>
               <a class="btn btn-danger" href="#">Scarica PDF</a>
+              <a href="{{route("contractSignature", $contract->id)}}">Inserisci firma</a>
+              <a href="{{route("contractMail", $contract->id)}}">Manda una mail</a>
             </td>
           </tr>
 

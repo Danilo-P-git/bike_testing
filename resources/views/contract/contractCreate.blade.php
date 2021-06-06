@@ -4,7 +4,7 @@
 
 
 <div class="container">
-    
+
     <form action="{{route('contractStore')}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
@@ -21,16 +21,16 @@
                     @enderror
                 </div>
 
-                
+
                 <div class="form-group col-md-4 col-6">
-                    <label for="cognome">Costo noleggio</label>
+                    <label for="cognome">Cognome</label>
                     <input name="cognome" type="text" id="cognome" class="form-control" value="" >
                     @error('cognome')
                         <div class="alert alert-danger">{{$message}}</div>
                     @enderror
                 </div>
 
-                
+
                 <div class="form-group col-md-4 col-6">
                     <label for="tel">Telefono</label>
                     <input name="tel" type="number" id="tel" class="form-control" value="39" >
@@ -39,7 +39,7 @@
                     @enderror
                 </div>
 
-                
+
                 <div class="form-group col-md-4 col-6">
                     <label for="mail">mail</label>
                     <input name="mail" type="mail" id="mail" class="form-control" value="" >
@@ -96,7 +96,7 @@
                     @enderror
                 </div>
 
-                
+
                 <div class="form-group col-md-4 col-6">
                     <label for="data_inizio">data_inizio</label>
                     <input name="data_inizio" type="date" id="data_inizio" class="form-control" value="" >
@@ -105,7 +105,7 @@
                     @enderror
                 </div>
 
-                
+
                 <div class="form-group col-md-4 col-6">
                     <label for="data_fine">data_fine</label>
                     <input name="data_fine" type="date" id="data_fine" class="form-control" value="" >
@@ -114,7 +114,7 @@
                     @enderror
                 </div>
 
-                                
+
                 <div class="form-group col-md-4 col-6">
                     <label for="comune_residenza">comune_residenza</label>
                     <input name="comune_residenza" type="text" id="comune_residenza" class="form-control" value="" >
@@ -131,11 +131,11 @@
                     @enderror
                 </div>
 
-                <!-- Button trigger modal -->
+                {{-- <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                     Seleziona le tue bici
                 </button>
-                
+
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -151,12 +151,12 @@
 
 
                                 <div class="form-check">
-                                   
+
 
                                     <input name="bike[]" type="checkbox" class="form-check-input" id="bike{{$bike->id}}" value="{{$bike->id}}">
                                     <label class="form-check-label" style="font-size: 22px" for="bike{{$bike->id}}">{{$bike->name}} - {{$bike->taglia}}</label>
                                 </div>
-                
+
                             @endforeach
                         </div>
                         <div class="modal-footer">
@@ -164,7 +164,7 @@
                         </div>
                     </div>
                     </div>
-                </div>
+                </div> --}}
 
                 <button id="submit" type="submit" class="btn btn-primary">Guarda Preview</button>
 

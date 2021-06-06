@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace App\Http\Controllers;
 
@@ -8,6 +8,10 @@ use App\Models\Contract;
 use App\Models\Category;
 use App\Models\Photo;
 use Carbon\Carbon;
+use App\Mail\SendNewMail;
+use Illuminate\Support\Facades\Mail;
+use PDF;
+use Illuminate\Support\Facades\Storage;
 
 
 class ContractController extends Controller
@@ -19,7 +23,7 @@ class ContractController extends Controller
      */
     public function index()
     {
-        $today = Carbon::today();
+        $today = Carbon::now()->format('Y-m-d');
 
         $contracts = Contract::with('bike', 'photo')->orderBy('id')->get();
         // dd($contracts);
@@ -33,11 +37,13 @@ class ContractController extends Controller
      */
     public function create()
     {
-        $bikes = Bike::where([
-            ['manutenzione', '=', 0],
-            ['bloccata', '=', 0],
-            ])->get();
-        return view('contract.contractCreate', compact('bikes'));
+        $today = Carbon::now()->format('Y-m-d');
+
+        // $bikes = Bike::where([
+        //     ['manutenzione', '=', 0],
+        //     ['bloccata', '=', 0],
+        //     ])->get();
+        return view('contract.contractCreate', compact('today'));
     }
 
     /**
@@ -68,17 +74,122 @@ class ContractController extends Controller
         $newContract->residenza_temp = $request->residenza_temp;
 
         $newContract->save();
-        
-        $newId = $newContract->id;
-        $contract = Contract::with('bike')->find($newId);
 
-        $contract->bike()->sync($request->bike);
+        // $newId = $newContract->id;
+        // $contract = Contract::with('bike')->find($newId);
 
-        return redirect()->route('contractShow', $newContract)
+        // $contract->bike()->sync($request->bike);
+
+        return redirect()->route('contractBikeChosing', $newContract);
 
 
     }
 
+
+
+    public function sendMail($id){
+        $contract = Contract::find($id);
+
+
+        Mail::to($contract->mail)->send(new SendNewMail($contract));
+        return back()->with(['message', 'Email Mandata']);
+    }
+
+
+
+
+
+
+    public function bikeChosing($id)
+    {
+        $today = Carbon::now()->format('Y-m-d');
+
+        $contract = Contract::with('bike')->find($id);
+        // dd($contract->data_inizio);
+        $bikes = Bike::with('category')->where([
+            ['manutenzione', '=', 0],
+            ])->get();
+        // dd($contract);
+        $biciCorretta = array();
+        $biciSbagliata= array();
+        foreach ($bikes as $bike) {
+            if (count($bike->contract) > 0) {
+                foreach ($bike->contract as $contrattoEsistente) {
+
+                    if ($contract->data_inizio <= $contrattoEsistente->data_fine) {
+                        $errore = "Bici non disponibile per quelle date";
+
+                    }   else {
+                        array_push($biciCorretta, $bike);
+
+
+
+                    }
+                }
+
+
+            } else {
+                array_push($biciCorretta, $bike);
+
+            }
+        }
+
+        // dd($contract);
+        $availables = array_unique($biciCorretta);
+        // dd($biciCorretteCollection);
+
+
+        return view('contract.contractBikeChosing', compact('availables','contract'));
+    }
+
+    public function bikeStoring(Request $request, $id){
+
+
+        $contract = Contract::with('bike')->find($id);
+
+        $contract->bike()->sync($request->bike);
+        return redirect()->route('contractShow', $contract);
+    }
+
+    public function signature($id)
+    {
+        $contract = Contract::find($id);
+        return view('contract.contractSignature', compact('contract'));
+
+    }
+
+
+    public function signatureUpload(Request $request ,$id)
+    {
+        $contract = Contract::find($id);
+
+        // $folderPath = public_path()."storage/";
+
+
+
+        $image_parts = explode(";base64,", $request->signed);
+
+
+
+        $image_type_aux = explode("image/", $image_parts[0]);
+
+
+
+        $image_type = $image_type_aux[1];
+
+        $fileName = 'sign'.$contract->id.".png";
+
+        $image_base64 = base64_decode($image_parts[1]);
+
+
+        $path = Storage::disk('public')->put($fileName, $image_base64);
+
+        $contract = Contract::find($id);
+        $contract->sign = '/storage/'.$fileName;
+        $contract->push();
+        return back()->with('success', 'success Full upload signature');
+
+    }
     /**
      * Display the specified resource.
      *
@@ -87,7 +198,22 @@ class ContractController extends Controller
      */
     public function show($id)
     {
-        //
+
+
+        $contract = Contract::with('bike')->find($id);
+
+        return view('contract.contractShow', compact('contract'));
+    }
+
+    public function generaPdf($id)
+    {
+        $today = Carbon::now()->format('Y-m-d');
+
+        $contract = Contract::with('bike')->find($id);
+        view()->share('contract', $contract);
+        $pdf = PDF::loadView('templatePdf.contractPdf', $contract);
+
+        return $pdf->download('contratto.pdf');
     }
 
     /**
