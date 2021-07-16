@@ -1,28 +1,38 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>Contratto</title>
 
-    <!-- Scripts -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body style="font-size: 18px">
-    <a href=""></a>
-    <div style="width: 800px; margin:auto">
+    <style>
+        .text-center {
+            text-align: center;
+        
+        }
+        .my-2 {
+            padding-top: 20px;
+            padding-bottom: 20px
+        } 
+        .my-4 {
+            padding-top: 40px;
+            padding-bottom: 40px
+        }      
+        .my-3 {
+            padding-top: 30px;
+            padding-bottom: 30px
+        }
+        .page-break {
+            page-break-after: always;
+        }             
+    </style>
+    <div style="width: 600px; margin:auto">
         {{-- <a class="btn btn-primary" href="{{ URL::to('/employee/pdf') }}">Export to PDF</a> --}}
 
         <h1 class="text-center my-3">CONTRATTO DI NOLEGGIO BICICLETTA</h1>
@@ -38,9 +48,10 @@
             alla Kemedia s.r.l., d'ora in poi per brevità identificata come “proprietario”, la locazione delle
             seguenti (bicicletta muscolare / bicicletta a pedalata assistita)
             @foreach ($contract->bike as $bike )
-                <strong>{{$bike->name}}</strong> , dal valore di <strong>{{$bike->valore_noleggio}}</strong>
+                <strong>{{$bike->name}}</strong> 
             @endforeach
             dal <strong>{{$contract->data_inizio}}</strong> al {{$contract->data_fine}}.
+            Con un costo totale definito in precedenza di {{$contract->costo}};
         </p>
 
         <h2 class="text-center my-4">DICHIARA A TAL FINE</h2>
@@ -72,7 +83,10 @@
         <p class="my-4">data: </p>
 
         <p>L'utente</p>
-
+        <br>
+        {{-- @dd(asset('storage\sign'.$contract->id.'.png')) --}}
+        <img style="width: 50%;" src="{{ storage_path('app/public/sign'.$contract->id.'.jpg') }}" alt="">
+        <div class="page-break"></div>
         <div>
             <h5 class="text-center my-3">REGOLAMENTO E CONDIZIONI DI NOLEGGIO</h5>
             <h6 class="text-center my-3">Premessa</h6>
@@ -81,7 +95,7 @@
                     presente regolamento, delle tariffe, degli orari di apertura e chiusura, della Società Kemedia srl proprietaria del bene con sede in Catania Via VIII Strada n.7- P.iva
                     05245320873</strong>
             </p>
-            <ul>
+            <ol>
                 <li><small>Per ottenere il noleggio di una bicicletta muscolare o di una bicicletta a pedalata assistita l'utente deve presentare preventivamente al punto di noleggio un documento
                     di identità valido, e formalizzare il contratto. Il noleggio è riservato ai maggiorenni. I minorenni necessitano dell’autorizzazione di un rappresentante legale.</small></li>
 
@@ -157,24 +171,20 @@
                     e contro - rmato da un adulto/maggiorenne.</small></li>
 
 
-            </ul>
-            <p>
-                Data: <strong></strong>
-            </p>
-            <p>
-                L'utente
-            </p>
+            </ol>
+ 
 
             <p>
                 Ai sensi degli artt. 1341 e 1342 cod. civ., l'utente dichiara di aver compreso le condizioni contrattuali e sottoscrive espressamente per accettazione le seguenti clausole: Artt. 1, 2, 3,
                 4, 5, 6, 7, 8, 9, 10, 11, 12,13,14,15,16 17.
             </p>
-            <p>
-                data: <strong></strong>
-            </p>
+
             <p>
                 L'utente
             </p>
+            <br>
+            <img style="width: 50%;" src="{{ storage_path('app/public/sign'.$contract->id.'.jpg') }}" alt="">
+            <div class="page-break"></div>
             <br>
 
             <h4>INFORMATIVA AI SENSI DELL'ART. 13 D.Lgs 30/06/2003 N. 196 E DELL'ART. 13 DEL REGOLAMENTO UE 2016/676
@@ -197,8 +207,12 @@
             <p>I dati forniti potranno essere oggetto di trattamento per lo svolgimento di attività commerciali, quali ricerche di mercato, informazioni commerciali, offerte dirette di servizi o
                 promozioni o raccolti al fine di rilevare il gradimento del servizio di noleggio.</p>
             <p>Esprimo il consenso <strong> SI </strong> NO</p>
-            <p>data: <strong></strong></p>
+            
             <p>L'utente</p>
+            <br>
+            <br>
+        <img style="width: 50%;" src="{{ storage_path('app/public/sign'.$contract->id.'.jpg') }}" alt="">
+            
         </div>
     </div>
 

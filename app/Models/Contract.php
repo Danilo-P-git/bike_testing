@@ -15,8 +15,5 @@ class Contract extends Model
     {
         return $this->belongsToMany(Bike::class);
     }
-    public function photo()
-    {
-        return $this->hasMany(Photo::class);
-    }
+
 }

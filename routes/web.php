@@ -14,35 +14,34 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/bike', 'App\Http\Controllers\BikeController@index')->name('bikeIndex');
-Route::get('/bike/create', 'App\Http\Controllers\BikeController@create')->name('bikeCreate');
-Route::post('/bike/store', 'App\Http\Controllers\BikeController@store')->name('bikeStore');
-Route::get('/bike/edit{id}', 'App\Http\Controllers\BikeController@edit')->name('bikeEdit');
-Route::put('/bike/update{id}','App\Http\Controllers\BikeController@update')->name('bikeUpdate');
-Route::put('/bike/manutenzione{id}', 'App\Http\Controllers\BikeController@manutenzione')->name('bikeManutenzione');
-Route::delete('/bike/delete{id}', 'App\Http\Controllers\BikeController@destroy' )->name('bikeDelete');
+Route::get('/bike', 'App\Http\Controllers\BikeController@index')->name('bikeIndex')->middleware('auth');
+Route::get('/bike/create', 'App\Http\Controllers\BikeController@create')->name('bikeCreate')->middleware('auth');
+Route::post('/bike/store', 'App\Http\Controllers\BikeController@store')->name('bikeStore')->middleware('auth');
+Route::any('/bike/category','App\Http\Controllers\BikeController@category')->name('category')->middleware('auth');
+Route::any('/bike/category{id}','App\Http\Controllers\BikeController@editCategory')->name('editCategory')->middleware('auth');
 
-Route::get('/contract', 'App\Http\Controllers\ContractController@index')->name('contractIndex');
-Route::get('/contract/create', 'App\Http\Controllers\ContractController@create')->name('contractCreate');
-Route::post('/contract/store', 'App\Http\Controllers\ContractController@store')->name('contractStore');
-Route::any('/contract/bike{id}', 'App\Http\Controllers\ContractController@bikeChosing' )->name('contractBikeChosing');
-Route::any('/contract/bike/storing{id}','App\Http\Controllers\ContractController@bikeStoring' )->name('contractBikeStoring');
+Route::get('/bike/edit{id}', 'App\Http\Controllers\BikeController@edit')->name('bikeEdit')->middleware('auth');
+Route::put('/bike/update{id}','App\Http\Controllers\BikeController@update')->name('bikeUpdate')->middleware('auth');
+Route::put('/bike/manutenzione{id}', 'App\Http\Controllers\BikeController@manutenzione')->name('bikeManutenzione')->middleware('auth');
+Route::delete('/bike/delete{id}', 'App\Http\Controllers\BikeController@destroy' )->name('bikeDelete')->middleware('auth');
+
+Route::get('/contract', 'App\Http\Controllers\ContractController@index')->name('contractIndex')->middleware('auth');
+Route::get('/contract/create', 'App\Http\Controllers\ContractController@create')->name('contractCreate')->middleware('auth');
+Route::post('/contract/store', 'App\Http\Controllers\ContractController@store')->name('contractStore')->middleware('auth');
+Route::any('/contract/bike{id}', 'App\Http\Controllers\ContractController@bikeChosing' )->name('contractBikeChosing')->middleware('auth');
+Route::any('/contract/bike/storing{id}','App\Http\Controllers\ContractController@bikeStoring' )->name('contractBikeStoring')->middleware('auth');
 Route::any('/contract/signature{id}', 'App\Http\Controllers\ContractController@signature')->name('contractSignature');
-Route::any('/contract/signature/upload{id}', 'App\Http\Controllers\ContractController@signatureUpload')->name('contractSignatureUpload');
-Route::any('/contract/mail{id}', 'App\Http\Controllers\ContractController@sendMail')->name('contractMail');
-Route::any('/contract/sms{id}', 'App\Http\Controllers\ContractController@sendSms')->name('contractSms');
+Route::any('/contract/signature/upload{id}', 'App\Http\Controllers\ContractController@signatureUpload')->name('contractSignatureUpload')->middleware('auth');
+Route::any('/contract/mail{id}', 'App\Http\Controllers\ContractController@sendMail')->name('contractMail')->middleware('auth');
+Route::any('/contract/sms{id}', 'App\Http\Controllers\ContractController@sendSms')->name('contractSms')->middleware('auth');
+Route::any('/contract/pdf{id}', 'App\Http\Controllers\ContractController@generaPdf')->name('contractPdf')->middleware('auth');
 
-Route::get('/contract/show{id}', 'App\Http\Controllers\ContractController@show')->name('contractShow');
-Route::get('/contract/generatePdf{id}', 'App\Http\Controllers\ContractController@generaPdf')->name('contractPdf');
-Route::get('/contract/edit{id}', 'App\Http\Controllers\ContractController@edit')->name('contractEdit');
-Route::put('/contract/update{id}','App\Http\Controllers\ContractController@update')->name('contractUpdate');
-// Route::put('/contract/manutenzione{id}', 'App\Http\Controllers\ContractController@manutenzione')->name('contractManutenzione');
-Route::delete('/contract/delete{id}', 'App\Http\Controllers\ContractController@destroy' )->name('contractDelete');
+Route::get('/contract/show{id}', 'App\Http\Controllers\ContractController@show')->name('contractShow')->middleware('auth');
+Route::get('/contract/edit{id}', 'App\Http\Controllers\ContractController@edit')->name('contractEdit')->middleware('auth');
+Route::put('/contract/update{id}','App\Http\Controllers\ContractController@update')->name('contractUpdate')->middleware('auth');
+// Route::put('/contract/manutenzione{id}', 'App\Http\Controllers\ContractController@manutenzione')->name('contractManutenzione')->middleware('auth');
+Route::delete('/contract/delete{id}', 'App\Http\Controllers\ContractController@destroy' )->name('contractDelete')->middleware('auth');

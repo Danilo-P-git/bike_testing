@@ -2,22 +2,19 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <h1 class="text-center">Cosa vuoi fare?</h1>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
+    <div class="row my-5">
+        <div class="col d-flex">
+            <a class="btn  btn_menu shadow  m-auto d-flex" href="{{route('bikeIndex')}}"><span class="m-auto">BICI</span></a>
+  
+        </div>
+        <div class="col">
+          <a class="btn  btn_menu shadow m-auto d-flex" href="{{route('contractIndex')}}"><span class="m-auto">CONTRATTI</span></a>
+            
+  
         </div>
     </div>
+    
 </div>
 @endsection

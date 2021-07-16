@@ -23,7 +23,7 @@ class BikeObserver
                 // dd($end_date."////".$start_date."////".$today);
                 // dd($bike->contract);
                 // dd($today>$start_date && $today<$end_date);
-                if ($today>$start_date && $today<$end_date) {
+                if ($today>=$start_date && $today<=$end_date) {
                     $bike->bloccata = 1;
                     $bike->push();
                 

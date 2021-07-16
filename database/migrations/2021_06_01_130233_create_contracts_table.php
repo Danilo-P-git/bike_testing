@@ -31,6 +31,7 @@ class CreateContractsTable extends Migration
             $table->string('residenza_temp');
             $table->string('path')->nullable()->default(NULL);
             $table->string('sign')->nullable()->default(NULL);
+            $table->string('costo')->nullable()->default(NULL);
 
             $table->timestamps();
         });

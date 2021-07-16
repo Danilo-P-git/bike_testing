@@ -60,6 +60,20 @@
                     </select>
                 </div>
 
+
+                <div class="form-group col-md-4 col-6">
+                    <label for="cover_photo">Foto di copertina </label>
+                    <input class="form-control" type="file" name="cover_photo" id="cover_photo" accept="image/*">
+                    
+                </div>
+                
+                <div class="form-group col-12">
+                    <label for="photo[]">Foto di copertina </label>
+                    <input class="form-control" type="file" name="photo[]" id="photo[]" accept="image/*" multiple>
+                    
+                </div>
+
+
                 <button id="submit" type="submit" class="btn btn-primary">Crea BIKE</button>
 
 

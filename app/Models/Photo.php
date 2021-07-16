@@ -10,8 +10,8 @@ class Photo extends Model
     use HasFactory;
 
     
-    public function contract()
+    public function bike()
     {
-        return $this->belongsTo(Contract::class);
+        return $this->belongsTo(Bike::class);
     }
 }

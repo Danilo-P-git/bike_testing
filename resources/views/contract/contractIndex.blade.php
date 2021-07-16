@@ -9,14 +9,19 @@
     @if ($message = Session::get('message'))
         {{$message}}
     @endif
-    <table class="table rounded shadow">
+    <div class="form-row mt-5">
+      <div class="form-group col-md-4 col-6">
+      
+          <input type="text" class="form-control" id="search" placeholder="Type to search..." />
+      </div>
+    </div>
+    <table id="table" class="table rounded shadow table-sm border">
         <thead class="thead-dark">
           <tr>
             <th scope="col">id</th>
             <th scope="col">Nome </th>
             <th scope="col">data di inizio</th>
             <th scope="col">data di fine</th>
-            <th scope="col">numero Bici</th>
             <th scope="col">Azioni</th>
 
 
@@ -31,11 +36,16 @@
             <td>{{$contract->nome}}  {{$contract->cognome}}</td>
             <td>{{$contract->data_inizio}}</td>
             <td>{{$contract->data_fine}}</td>
-            <td>{{count($contract->bike)}}</td>
             <td>
-              <a class="btn btn-danger" href="#">Scarica PDF</a>
-              <a href="{{route("contractSignature", $contract->id)}}">Inserisci firma</a>
-              <a href="{{route("contractMail", $contract->id)}}">Manda una mail</a>
+              @if ($contract->sign != null)
+              <a class="btn btn-danger" target="_blank" href="{{route("contractPdf", $contract->id)}}">Scarica PDF</a>
+                <img style="width: 50px;" src="{{asset('storage\sign'.$contract->id.'.jpg')}}" alt="">
+              @endif
+
+              <a class="btn btn-success m-1"  href="{{route("contractSignature", $contract->id)}}">Inserisci firma</a>
+              <a class="btn btn-primary m-1" href="{{route("contractMail", $contract->id)}}">Manda una mail</a>
+              <a class="btn btn-secondary m-1" class="sms" href="{{route("contractSms", $contract->id)}}" value="{{$contract->id}}">Manda un sms</a>
+              <a class="btn btn-secondary m-1" href="{{route("contractShow", $contract->id)}}">SHOW</a>
             </td>
           </tr>
 
@@ -45,4 +55,16 @@
 
 </div>
 
+<script>
+      $("#search").keyup(function(){
+        var searchText = $(this).val().toLowerCase();
+        // Show only matching TR, hide rest of them
+        $.each($("#table tbody tr"), function() {
+            if($(this).text().toLowerCase().indexOf(searchText) === -1)
+               $(this).hide();
+            else
+               $(this).show();                
+        });
+    }); 
+</script>
 @endsection

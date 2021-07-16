@@ -32,4 +32,8 @@ class Bike extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function photo()
+    {
+        return $this->hasMany(Photo::class);
+    }
 }

@@ -1,5 +1,4 @@
- <?php
-
+<?php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,29 +11,22 @@ use App\Mail\SendNewMail;
 use Illuminate\Support\Facades\Mail;
 use PDF;
 use Illuminate\Support\Facades\Storage;
-
-
+use Illuminate\Support\Facades\Http;
+set_time_limit(300);
 class ContractController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+
     public function index()
     {
         $today = Carbon::now()->format('Y-m-d');
 
-        $contracts = Contract::with('bike', 'photo')->orderBy('id')->get();
+        $contracts = Contract::with('bike')->orderBy('id', 'desc')->get();
         // dd($contracts);
         return view('contract.contractIndex', compact('contracts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         $today = Carbon::now()->format('Y-m-d');
@@ -46,14 +38,25 @@ class ContractController extends Controller
         return view('contract.contractCreate', compact('today'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
+        $request->validate([
+            'nome' => "max:191",
+            'cognome' => "max:191",
+            'data_inizio'=>"required|date",
+            'data_fine'=>"required|date",
+            'tel'=>"required_without:mail",
+            'mail'=>"required_without:tel",
+            'nato_a'=>"max:191",
+            'nato_il'=>"date",
+            'comune_residenza'=>"max:191",
+            'n_documento'=>"",
+            'ente_documento'=>"max:191",
+            'data_documento'=>"date",
+            'via_residenza'=>"max:191",
+            'residenza_temp'=>"max:191",
+        ]);
 
 
         // dd($request->bike);
@@ -72,7 +75,6 @@ class ContractController extends Controller
         $newContract->ente_documento = $request->ente_documento;
         $newContract->via_residenza = $request->via_residenza;
         $newContract->residenza_temp = $request->residenza_temp;
-
         $newContract->save();
 
         // $newId = $newContract->id;
@@ -95,7 +97,23 @@ class ContractController extends Controller
         return back()->with(['message', 'Email Mandata']);
     }
 
+    public function sendSms($id){
+        $contract = Contract::find($id);
 
+        $basic  = new \Nexmo\Client\Credentials\Basic('f4a4f7d7', 'sH4HY84R9xkY3gJH');
+        $client = new \Nexmo\Client($basic);
+ 
+        $message = $client->message()->send([
+            'to' => $contract->tel,
+            'from' => 'Etnatribe',
+            'text' => 'Clicca il seguente link per confermare http://127.0.0.1:8000/contract/signature'.$contract->id
+        ]);
+ 
+        // dd('SMS message has been delivered.');
+        
+        
+        return back()->with(['message', 'Sms inviato']);
+    }
 
 
 
@@ -154,6 +172,9 @@ class ContractController extends Controller
     public function signature($id)
     {
         $contract = Contract::find($id);
+
+
+
         return view('contract.contractSignature', compact('contract'));
 
     }
@@ -164,8 +185,38 @@ class ContractController extends Controller
         $contract = Contract::find($id);
 
         // $folderPath = public_path()."storage/";
+        $request->validate([
+        'nome' => "required|max:191",
+        'cognome' => "required|max:191",
+        'data_inizio'=>"required|date",
+        'data_fine'=>"required|date",
+        'tel'=>"required",
+        'mail'=>"required",
+        'nato_a'=>"required|max:191",
+        'nato_il'=>"required|date",
+        'comune_residenza'=>"required|max:191",
+        'n_documento'=>"required",
+        'ente_documento'=>"required|max:191",
+        'data_documento'=>"required|date",
+        'via_residenza'=>"required|max:191",
+        'residenza_temp'=>"required|max:191",
+        ]);
 
-
+        $contract->nome = $request->nome;
+        $contract->cognome = $request->cognome;
+        $contract->data_inizio = $request->data_inizio;
+        $contract->data_fine = $request->data_fine;
+        $contract->tel = $request->tel;
+        $contract->mail = $request->mail;
+        $contract->nato_a = $request->nato_a;
+        $contract->nato_il = $request->nato_il;
+        $contract->comune_residenza = $request->comune_residenza;
+        $contract->n_documento = $request->n_documento;
+        $contract->data_documento = $request->data_documento;
+        $contract->ente_documento = $request->ente_documento;
+        $contract->via_residenza = $request->via_residenza;
+        $contract->residenza_temp = $request->residenza_temp;
+        $contract->push();
 
         $image_parts = explode(";base64,", $request->signed);
 
@@ -177,7 +228,7 @@ class ContractController extends Controller
 
         $image_type = $image_type_aux[1];
 
-        $fileName = 'sign'.$contract->id.".png";
+        $fileName = 'sign'.$contract->id.".jpg";
 
         $image_base64 = base64_decode($image_parts[1]);
 
@@ -187,20 +238,22 @@ class ContractController extends Controller
         $contract = Contract::find($id);
         $contract->sign = '/storage/'.$fileName;
         $contract->push();
-        return back()->with('success', 'success Full upload signature');
+
+        $fileName = "contratto-".$contract->id.".pdf";
+        $pdf = PDF::loadView('templatePdf.contractPdf', compact('contract') );
+        Storage::put('public/contract/'.$fileName, $pdf->output());
+        $contract->path = '/storage/contract/'.$fileName;
+        
+        $contract->push();
+        return $pdf->download($fileName);;
 
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    
     public function show($id)
     {
 
 
-        $contract = Contract::with('bike')->find($id);
+        $contract = Contract::with('bike.photo')->find($id);
 
         return view('contract.contractShow', compact('contract'));
     }
@@ -210,43 +263,16 @@ class ContractController extends Controller
         $today = Carbon::now()->format('Y-m-d');
 
         $contract = Contract::with('bike')->find($id);
-        view()->share('contract', $contract);
-        $pdf = PDF::loadView('templatePdf.contractPdf', $contract);
+        // dd($contract);
+        $fileName = "contratto-".$contract->id.".pdf";
+        $pdf = PDF::loadView('templatePdf.contractPdf', compact('contract') );
+        Storage::put('public/contract/'.$fileName, $pdf->output());
+        $contract->path = '/storage/contract/'.$fileName;
+        
+        $contract->push();
 
-        return $pdf->download('contratto.pdf');
+        return $pdf->download($fileName);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }
