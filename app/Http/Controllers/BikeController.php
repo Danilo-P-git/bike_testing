@@ -149,7 +149,7 @@ class BikeController extends Controller
         $category->fiveDay = $request->fiveDay;
         $category->sixDay = $request->sixDay;
         $category->sevenDay = $request->sevenDay;
-        $category->overprice = $request->overPrice;
+        $category->overprice = $request->overprice;
 
         $category->push();
         return back()->with('message', 'Categoria modificata');

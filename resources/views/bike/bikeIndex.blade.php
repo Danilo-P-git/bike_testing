@@ -129,55 +129,55 @@
                                                 <div class="form-group row">
                                                     <label for="tipo{{$category->id}}" class="col-sm-2 col-form-label">Nome Categoria</label>
                                                     <div class="col-sm-10">
-                                                    <input type="text" required name="tipo" class="form-control" id="tipo{{$category->id}}">
+                                                    <input type="text" required name="tipo" class="form-control" id="tipo{{$category->id}}" value="{{$category->tipo}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="base{{$category->id}}" class="col-sm-2 col-form-label">Prezzo Base</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="base" class="form-control" step=".01" id="base{{$category->id}}">
+                                                    <input type="number" required name="base" class="form-control" step=".01" id="base{{$category->id}}" value="{{$category->base}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="twoDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo 2 giorni</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="twoDay" class="form-control" step=".01" id="twoDay{{$category->id}}">
+                                                    <input type="number" required name="twoDay" class="form-control" step=".01" id="twoDay{{$category->id}}" value="{{$category->twoDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="threeDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo tre giorni</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="threeDay" class="form-control" step=".01" id="threeDay{{$category->id}}">
+                                                    <input type="number" required name="threeDay" class="form-control" step=".01" id="threeDay{{$category->id}}" value="{{$category->threeDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="fourDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo 4 giorni</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="fourDay" class="form-control" step=".01" id="fourDay{{$category->id}}">
+                                                    <input type="number" required name="fourDay" class="form-control" step=".01" id="fourDay{{$category->id}}" value="{{$category->fourDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="fiveDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo 5 giorni</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="fiveDay" class="form-control" step=".01" id="fiveDay{{$category->id}}">
+                                                    <input type="number" required name="fiveDay" class="form-control" step=".01" id="fiveDay{{$category->id}}" value="{{$category->fiveDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="sixDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo sei giorni</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="sixDay" class="form-control" step=".01" id="sixDay{{$category->id}}">
+                                                    <input type="number" required name="sixDay" class="form-control" step=".01" id="sixDay{{$category->id}}" value="{{$category->sixDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="sevenDay{{$category->id}}" class="col-sm-2 col-form-label">Prezzo sevenDay</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="sevenDay" class="form-control" step=".01" id="sevenDay{{$category->id}}">
+                                                    <input type="number" required name="sevenDay" class="form-control" step=".01" id="sevenDay{{$category->id}}" value="{{$category->sevenDay}}">
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label for="overprice{{$category->id}}" class="col-sm-2 col-form-label">Prezzo giorno aggiuntivo</label>
                                                     <div class="col-sm-10">
-                                                    <input type="number" required name="overprice" class="form-control" step=".01" id="overprice{{$category->id}}">
+                                                    <input type="number" required name="overprice" class="form-control" step=".01" id="overprice{{$category->id}}" value="{{$category->overprice}}">
                                                     </div>
                                                 </div>
                                         </div>

@@ -57,13 +57,14 @@ class ContractController extends Controller
             'via_residenza'=>"max:191",
             'residenza_temp'=>"max:191",
         ]);
-
+        
 
         // dd($request->bike);
         $newContract = new Contract;
         $newContract->nome = $request->nome;
         $newContract->cognome = $request->cognome;
         $newContract->data_inizio = $request->data_inizio;
+        
         $newContract->data_fine = $request->data_fine;
         $newContract->tel = $request->tel;
         $newContract->mail = $request->mail;
@@ -77,6 +78,7 @@ class ContractController extends Controller
         $newContract->residenza_temp = $request->residenza_temp;
         $newContract->save();
 
+        
         // $newId = $newContract->id;
         // $contract = Contract::with('bike')->find($newId);
 
@@ -163,9 +165,53 @@ class ContractController extends Controller
     public function bikeStoring(Request $request, $id){
 
 
-        $contract = Contract::with('bike')->find($id);
+        $contract = Contract::with('bike.category')->find($id);
+
+
+
 
         $contract->bike()->sync($request->bike);
+
+        $startDate = $contract->data_inizio;
+        $endDate = $contract->data_fine;
+        $carbonStart = Carbon::parse($startDate);
+        $carbonEnd = Carbon::parse($endDate);
+        $differenza = $carbonEnd->diffInDays($carbonStart);
+        $price = 0;
+        foreach ($contract->bike as $key) {
+            // dd($key);
+            if ($differenza <= 1) {
+                $price += $key->category->base;
+            } elseif ($differenza == 2) {
+                $price += $key->category->twoDay;
+                
+            } elseif ($differenza == 3) {
+                $price += $key->category->threeDay;
+            } elseif ($differenza == 4) {
+                $price += $key->category->fourDay;
+            } elseif ($differenza == 5) {
+                $price += $key->category->fiveDay;
+            } elseif ($differenza == 6) {
+                $price += $key->category->sixDay;
+            } elseif ($differenza == 7) {
+                $price += $key->category->sevenDay;
+            } elseif($differenza > 7) {
+                $overpriceDiff = $differenza - 7;
+                $sette = $key->category->sevenDay;
+                $surplus = $key->category->overprice * $overpriceDiff;
+                $price += $sette + $surplus;
+                // dd($price);
+
+            }
+
+            
+
+
+        }
+        // dd($price);
+        $contract->costo = $price;
+        $contract->push();
+
         return redirect()->route('contractShow', $contract);
     }
 
