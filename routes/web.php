@@ -18,7 +18,7 @@ Auth::routes();
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/bike', 'App\Http\Controllers\BikeController@index')->name('bikeIndex')->middleware('auth');
+Route::any('/bike', 'App\Http\Controllers\BikeController@index')->name('bikeIndex')->middleware('auth');
 Route::get('/bike/create', 'App\Http\Controllers\BikeController@create')->name('bikeCreate')->middleware('auth');
 Route::post('/bike/store', 'App\Http\Controllers\BikeController@store')->name('bikeStore')->middleware('auth');
 Route::any('/bike/category','App\Http\Controllers\BikeController@category')->name('category')->middleware('auth');
@@ -45,3 +45,11 @@ Route::get('/contract/edit{id}', 'App\Http\Controllers\ContractController@edit')
 Route::put('/contract/update{id}','App\Http\Controllers\ContractController@update')->name('contractUpdate')->middleware('auth');
 // Route::put('/contract/manutenzione{id}', 'App\Http\Controllers\ContractController@manutenzione')->name('contractManutenzione')->middleware('auth');
 Route::delete('/contract/delete{id}', 'App\Http\Controllers\ContractController@destroy' )->name('contractDelete')->middleware('auth');
+Route::any('/booking/select', 'App\Http\Controllers\UserBooking@select')->name('bookingSelect')->middleware('lang');
+Route::get('booking/select/{lang}', function ($lang) {
+    App::setlocale($lang);
+    session()->put('lang', $lang);
+    return redirect()->back();
+    
+})->name('langChange')->middleware('lang');
+

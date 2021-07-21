@@ -20,14 +20,7 @@
                 </div>
 
                 
-                <div class="form-group col-md-4 col-6">
-                    <label for="valore_noleggio">Costo noleggio</label>
-                    <input name="valore_noleggio" type="number" id="valore_noleggio" class="form-control" value="" >
-                    @error('valore_noleggio')
-                        <div class="alert alert-danger">{{$message}}</div>
-                    @enderror
-                </div>
-
+              
                 
                 <div class="form-group col-md-4 col-6">
                     <label for="valore_acquisto">Valore d'acquisto</label>

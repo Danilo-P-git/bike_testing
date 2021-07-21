@@ -9,5 +9,10 @@ use Illuminate\Http\Request;
 
 class UserBooking extends Controller
 {
-    //
+    public function select()
+    {
+        $category = Category::with('bike')->get();
+        
+        return view('booking.request', compact('category'));
+    }
 }

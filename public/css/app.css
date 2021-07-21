@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);
+@import url(https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap);
 @charset "UTF-8";
 /*!
  * Bootstrap v4.6.0 (https://getbootstrap.com/)
@@ -10006,6 +10006,10 @@ h3 {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 75%;
   }
+
+  #userBooking .container-xl, #userBooking .container-lg, #userBooking .container-md, #userBooking .container-sm, #userBooking .container {
+    max-width: 55%;
+  }
 }
 .container .row .col .btn_menu {
   width: 100%;
@@ -10018,4 +10022,13 @@ h3 {
   background-color: #ffed4a;
   color: black;
   font-size: 40px;
+}
+
+#jumbotron .row {
+  height: 400px;
+}
+#jumbotron .row .jumbo-title h2 {
+  font-size: 35px;
+  color: #ce2e30;
+  font-weight: bolder;
 }

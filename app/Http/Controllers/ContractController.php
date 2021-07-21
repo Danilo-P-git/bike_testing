@@ -130,15 +130,17 @@ class ContractController extends Controller
             ['manutenzione', '=', 0],
             ])->get();
         // dd($contract);
+        // dd($bikes);
         $biciCorretta = array();
         $biciSbagliata= array();
         foreach ($bikes as $bike) {
             if (count($bike->contract) > 0) {
                 foreach ($bike->contract as $contrattoEsistente) {
-
-                    if ($contract->data_inizio <= $contrattoEsistente->data_fine) {
+                    $startDate = $contract->data_inizio;
+                    $endDate =  $contract->data_fine;
+                    if ($contract->data_inizio <= $contrattoEsistente->data_fine && $contract->data_fine >= $contrattoEsistente->data_inizio) {
                         $errore = "Bici non disponibile per quelle date";
-
+                        array_push($biciSbagliata, $bike);
                     }   else {
                         array_push($biciCorretta, $bike);
 
@@ -154,7 +156,7 @@ class ContractController extends Controller
             }
         }
 
-        // dd($contract);
+        // dd($biciSbagliata);
         $availables = array_unique($biciCorretta);
         // dd($biciCorretteCollection);
 

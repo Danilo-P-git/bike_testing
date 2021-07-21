@@ -1,6 +1,5 @@
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 // Variables
 @import 'variables';
 
@@ -11,6 +10,12 @@
 .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 75%;
 }
+#userBooking {
+    .container-xl, .container-lg, .container-md, .container-sm, .container {
+        max-width: 55%;
+    }
+}
+
 }
 .container{
     .row {
@@ -29,4 +34,18 @@
             }
         }
     }
+}
+
+#jumbotron {
+    .row {
+        height: 400px;
+        .jumbo-title {
+            h2{
+                font-size: 35px;
+                color: #ce2e30;
+                font-weight: bolder;
+            }
+        }
+    }
+
 }

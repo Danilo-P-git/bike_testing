@@ -15,15 +15,49 @@ class BikeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $today = Carbon::now()->format('Y-m-d');
-        
+    public function index(Request $request)
+    {  
+
+        // dd($request->data);
+        // se ha impostato la data 
+        if ($request->has('data')) {
+
+            $today = $request->data;
+            $categories = Category::all();
+
+            $bikes = Bike::all();
+            $difference = 1;
+
+            foreach ($bikes as $bike) {
+                if (count($bike->contract)>0) {
+                    foreach ($bike->contract as $contract) {
+                        $end_date = $contract->data_fine;
+                        $start_date = $contract->data_inizio;
+                        if ($today>=$start_date && $today<=$end_date) {
+                            $bike->setRelation('temp', 1);
+                            // dd($bike);
+
+                        } else {
+                            $bike->setRelation('temp', 0);
+                            
+                        }
+                    }
+                }
+            }
+
+
+            // chiusura if se ha data
+            return view('bike.bikeIndex', compact('bikes', 'categories', 'today','difference'));
+
+        } else {
+
         $bikes = Bike::all();
+        $today = Carbon::now()->format('Y-m-d');
         $categories = Category::all();
-        // guarda l'observer 
-        // dd($contracts);
-        return view('bike.bikeIndex', compact('bikes', 'today', 'categories'));
+            return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
+        }
+        
+
     }
 
     /**
@@ -117,7 +151,7 @@ class BikeController extends Controller
         if ($categories->isEmpty()) {
             $category = new Category;
             $category->tipo = $request->tipo;
-            if ($request->filled(['base', 'twoDay', 'threeDay', 'fourDay', 'fiveDay', 'sixDay', 'sevenDay', 'overprice' ])) {
+            if ($request->filled(['base', 'twoDay', 'threeDay', 'fourDay', 'fiveDay', 'sixDay', 'sevenDay', 'overprice'])) {
                 $category->base = $request->base;
                 $category->twoDay = $request->twoDay;
                 $category->threeDay = $request->threeDay;
@@ -126,6 +160,13 @@ class BikeController extends Controller
                 $category->sixDay = $request->sixDay;
                 $category->sevenDay = $request->sevenDay;
                 $category->overprice = $request->overprice;
+                $cover_image = $request->cover_image->storeAs(
+                    "images/".$category->tipo,
+                    "image-cat-".$category->tipo.".jpg",
+                    "public"
+                );
+                $category->cover_image = $cover_image;
+                
             }
             
             $category->save();
@@ -150,7 +191,12 @@ class BikeController extends Controller
         $category->sixDay = $request->sixDay;
         $category->sevenDay = $request->sevenDay;
         $category->overprice = $request->overprice;
-
+        $cover_image = $request->cover_image->storeAs(
+            "images/".$category->tipo,
+            "image-cat-".$category->tipo.".jpg",
+            "public"
+        );
+        $category->cover_image = $cover_image;
         $category->push();
         return back()->with('message', 'Categoria modificata');
     }

@@ -2,18 +2,32 @@
 @section('content')
 
 <div class="container d-flex flex-column">
+    @if (isset($difference))
+        <h2>Ricerca per giorno {{$today}}</h2>
+    @endif
+
     @if(Session::has('message'))
     <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
     @endif
     <h1 class="text-center">Tutte le bici</h1>
+    <div class="col-auto ml-auto">
+        <form action="{{route('bikeIndex')}}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('POST')
 
+            <label for="data">Controlla disponibilità</label>
+            <input class="form-control" name="data" id="data" type="date" value="{{$today}}">
+
+            <button class="btn btn-primary" type="submit">Check</button>
+        </form>
+    </div>
     <a class="btn btn-primary mx-auto my-3 p-3" href="{{route("bikeCreate")}}">Inserisci una nuova bici</a>
 
     <h3 class="text-center">AGGIUNGI UNA CATEGORIA</h3>
     <div class="offset-3 col-6 d-flex">
-
+    
         
-        <form action="{{route("category")}}" method="post" class="w-100">
+        <form action="{{route("category")}}" method="POST" class="w-100" enctype="multipart/form-data">
             @csrf
             @method('POST')
             <div class="form-row">
@@ -85,6 +99,17 @@
                         <input type="number" name="overprice" class="form-control" id="overprice" >
                     </div>
 
+                    <div class="form-group col-md-4 col-lg-4 col-12 priceCat" style="display: none">
+                        <p><small>Seleziona immagine cover</small></p>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="coverImage" name="cover_image" accept="image/*">
+                            <label class="custom-file-label" for="coverImage">Seleziona immagine</label>
+
+                          </div>
+                    </div>
+
+
+
                     
 
                 {{-- </div> --}}
@@ -96,6 +121,7 @@
 
 
     </div>
+
     <div id="table-cat" class="form-row" style="display: none">
         <table class="table rounded shadow table-sm border">
             <thead class="thead-dark">
@@ -114,8 +140,9 @@
                         </button>
                         
                         <!-- Modal -->
-                        <form action="{{route('editCategory', $category->id)}}">
-
+                        <form action="{{route('editCategory', $category->id)}}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
                             <div class="modal fade" id="editCat{{$category->id}}" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
@@ -180,6 +207,14 @@
                                                     <input type="number" required name="overprice" class="form-control" step=".01" id="overprice{{$category->id}}" value="{{$category->overprice}}">
                                                     </div>
                                                 </div>
+
+                                                <div class="form-group row ">
+                                                    <p><small>Seleziona immagine cover</small></p>
+                                                    <div class="custom-file">
+                                                        <input type="file" class="custom-file-input" id="cover_image" name="cover_image" accept="image/*">
+                                                        <label class="custom-file-label" for="cover_image">Seleziona immagine</label>
+                                                      </div>
+                                                </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="submit" class="btn btn-primary">Save</button>
@@ -211,16 +246,17 @@
 
     @foreach ($bikes as $bike)
         
-    <div class="card m-2" style="width: 18rem; @if ($bike->manutenzione == 1) background-color: red; @elseif ($bike->bloccata == 1) background-color: yellow; @endif">
+    <div class="card m-2" style="width: 18rem; @if ($bike->manutenzione == 1) background-color: red; @elseif ($bike->bloccata == 1 || isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif">
         <div class="card-body">
             <h5 class="card-title">{{$bike->name}}</h5>
-            @if ($bike->bloccata == 1)
+            @if ($bike->bloccata == 1 || isset($bike->temp) && $bike->temp == 1)
 
                 <p class="card-text"> <strong> Contratti Attivi </strong></p>
                 @foreach ($bike->contract as$contract )
                
-                @if ($contract->data_inizio < $today && $contract->data_fine > $today ) 
-                    <p class="card-text">id = {{$contract->id}}</p>
+                @if ($contract->data_inizio <= $today && $contract->data_fine >= $today ) 
+                    <a href="{{route('contractShow', $contract->id)}}">Contratto {{$contract->cognome}}</a>
+                    {{-- <p class="card-text">id = {{$contract->id}}</p> --}}
                 
                 @endif
                 
@@ -233,7 +269,7 @@
                 @csrf
                 @method('PUT')
                 <div class="custom-control custom-switch">
-                    <input name="manutenzione" type="checkbox" class="custom-control-input" id="manutenzione{{$bike->id}}" @if($bike->manutenzione == 1 ) checked @endif @if($bike->bloccata == 1) disabled @endif onchange="this.form.submit()">
+                    <input name="manutenzione" type="checkbox" class="custom-control-input" id="manutenzione{{$bike->id}}" @if($bike->manutenzione == 1 ) checked @endif @if($bike->bloccata == 1 || isset($bike->temp) && $bike->temp == 1) disabled @endif onchange="this.form.submit()">
                     <label class="custom-control-label" for="manutenzione{{$bike->id}}">Attiva manutenzione</label>
                     <input class="submit" type="submit" hidden>
                 </div>
