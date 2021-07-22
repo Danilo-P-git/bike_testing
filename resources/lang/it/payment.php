@@ -19,6 +19,9 @@ return [
     'page'=>[
         'title'=> 'Noleggia una bici',
         'subtitle'=>'E scopri veri e propri angoli di paradiso.',
+        'date'=>'Seleziona le date del tuo noleggio',
+        'start'=>'Data inizio'
+
     ]
 
 ]

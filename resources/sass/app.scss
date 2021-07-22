@@ -35,16 +35,51 @@
         }
     }
 }
-
+.start-date {
+    background-color: #ce2e30 !important;
+}
+.end-date  {
+    background-color: #ce2e30 !important;
+}
 #jumbotron {
-    .row {
-        height: 400px;
+   min-height: 100vh;
+    .parallax {
+        background-image: url("https://www.etnatribe.it/bikenew/wp-content/uploads/2019/03/374c6488-e020-4d3e-b105-ebbc2e389489.jpg");
+
+        /* Set a specific height */
+        min-height: 500px;
+      
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: bottom;
+        background-repeat: no-repeat;
+        background-size: cover;
         .jumbo-title {
+            padding-top: 150px;
             h2{
                 font-size: 35px;
                 color: #ce2e30;
                 font-weight: bolder;
             }
+            h4{
+                font-size: 25px;
+                color: #fff;
+                font-weight: bolder;
+            }
+        }
+    }
+
+    .cat {
+        cursor: pointer;
+        width: 200px;
+        height: 16rem;
+        transition: 0.5s;
+        &:hover {
+            -webkit-box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
+            -moz-box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
+            box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
+            width: 215px;
+            height: 16.5rem;
         }
     }
 

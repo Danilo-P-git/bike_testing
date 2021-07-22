@@ -12,7 +12,8 @@ class UserBooking extends Controller
     public function select()
     {
         $category = Category::with('bike')->get();
-        
-        return view('booking.request', compact('category'));
+        $today = Carbon::now()->format('Y-m-d');
+
+        return view('booking.request', compact('category','today'));
     }
 }
