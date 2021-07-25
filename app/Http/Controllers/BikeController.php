@@ -16,47 +16,57 @@ class BikeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {  
+    {
 
-        // dd($request->data);
-        // se ha impostato la data 
+        // if ($request->has('data')) {
+
+        //     $today = $request->data;
+        //     $categories = Category::all();
+
+        //     $bikes = Bike::all();
+        //     $difference = 1;
+
+
+
+
+        //     // chiusura if se ha data
+        //     return view('bike.bikeIndex', compact('bikes', 'categories', 'today','difference'));
+
+        // } else {
+
+        // $bikes = Bike::all();
+        // $today = Carbon::now()->format('Y-m-d');
+        // $categories = Category::all();
+        //     return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
+        // }
+
         if ($request->has('data')) {
-
             $today = $request->data;
-            $categories = Category::all();
+            // $difference = 1;
 
-            $bikes = Bike::all();
-            $difference = 1;
+        } else {
+            $today = Carbon::now()->format('Y-m-d');
+        }
 
-            foreach ($bikes as $bike) {
-                if (count($bike->contract)>0) {
-                    foreach ($bike->contract as $contract) {
-                        $end_date = $contract->data_fine;
-                        $start_date = $contract->data_inizio;
-                        if ($today>=$start_date && $today<=$end_date) {
-                            $bike->setRelation('temp', 1);
-                            // dd($bike);
+        $categories = Category::all();
+        $bikes = Bike::all();
+        foreach ($bikes as $bike) {
+            if (count($bike->contract)>0) {
+                foreach ($bike->contract as $contract) {
+                    $end_date = $contract->data_fine;
+                    $start_date = $contract->data_inizio;
+                    if ($today>=$start_date && $today<=$end_date) {
+                        $bike->setRelation('temp', 1);
+                        // dd($bike);
 
-                        } else {
-                            $bike->setRelation('temp', 0);
-                            
-                        }
+                    } else {
+                        $bike->setRelation('temp', 0);
+
                     }
                 }
             }
-
-
-            // chiusura if se ha data
-            return view('bike.bikeIndex', compact('bikes', 'categories', 'today','difference'));
-
-        } else {
-
-        $bikes = Bike::all();
-        $today = Carbon::now()->format('Y-m-d');
-        $categories = Category::all();
-            return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
         }
-        
+        return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
 
     }
 
@@ -166,9 +176,9 @@ class BikeController extends Controller
                     "public"
                 );
                 $category->cover_image = $cover_image;
-                
+
             }
-            
+
             $category->save();
 
             return back()->with('message', 'Categoria aggiunta');
@@ -176,8 +186,8 @@ class BikeController extends Controller
         } else {
             return back()->with('message', 'Categoria già presente');
         }
-    
-        
+
+
     }
     public function editCategory(Request $request, $id)
     {
@@ -207,7 +217,7 @@ class BikeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {   
+    {
         $bikes = Bike::findOrFail($id);
         $categories = Category::all();
 
@@ -253,7 +263,7 @@ class BikeController extends Controller
     }
 
     public function manutenzione(Request $request, $id)
-    {   
+    {
         if ($request->manutenzione == 'on') {
             $manutenzione = 1;
         } else {
@@ -264,7 +274,7 @@ class BikeController extends Controller
         $bike->push();
 
         return redirect()->route('bikeIndex', $bike);
-        
+
     }
 
     /**
