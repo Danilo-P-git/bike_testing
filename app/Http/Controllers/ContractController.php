@@ -92,6 +92,7 @@ class ContractController extends Controller
 
 
     public function sendMail($id){
+        
         $contract = Contract::find($id);
 
 

@@ -19,7 +19,18 @@ return [
         'title'=> 'Rent a bike',
         'subtitle'=>'And discover true corners of paradise.',
         'date'=>'Select the dates of your rental',
-        'start'=>'Start date'
+        'start'=>'Start date',
+        'price'=> 'Prices',
+
+        '1day'=> '1 day',
+        '2day'=> '2 days',
+        '3day'=> '3 days',
+        '4day'=> '4 days',
+        '5day'=> '5 days',
+        '6day'=> '6 days',
+        '7day'=> '7 days',
+        'dispTitle'=>'Request availability'
+
     ]
 
 

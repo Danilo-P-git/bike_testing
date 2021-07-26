@@ -18,27 +18,7 @@ class BikeController extends Controller
     public function index(Request $request)
     {
 
-        // if ($request->has('data')) {
-
-        //     $today = $request->data;
-        //     $categories = Category::all();
-
-        //     $bikes = Bike::all();
-        //     $difference = 1;
-
-
-
-
-        //     // chiusura if se ha data
-        //     return view('bike.bikeIndex', compact('bikes', 'categories', 'today','difference'));
-
-        // } else {
-
-        // $bikes = Bike::all();
-        // $today = Carbon::now()->format('Y-m-d');
-        // $categories = Category::all();
-        //     return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
-        // }
+        
 
         if ($request->has('data')) {
             $today = $request->data;
@@ -110,7 +90,6 @@ class BikeController extends Controller
 
         $newBike = new Bike;
         $newBike->name = $request->name;
-        // $newBike->valore_noleggio = $request->valore_noleggio;
         $newBike->valore_acquisto = $request->valore_acquisto;
         $newBike->valore_vendita = $request->valore_vendita;
         $newBike->manutenzione = 0;
@@ -143,16 +122,7 @@ class BikeController extends Controller
         return redirect()->route('bikeIndex', $newBike);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
     public function category(Request $request)
     {
         $categories = Category::where('tipo', '=', $request->tipo)->get();
@@ -201,21 +171,24 @@ class BikeController extends Controller
         $category->sixDay = $request->sixDay;
         $category->sevenDay = $request->sevenDay;
         $category->overprice = $request->overprice;
-        $cover_image = $request->cover_image->storeAs(
-            "images/".$category->tipo,
-            "image-cat-".$category->tipo.".jpg",
-            "public"
-        );
+
+        // validazione image presente.
+
+        if (!is_null($request->cover_image)) {
+            $cover_image = $request->cover_image->storeAs(
+                "images/".$category->tipo,
+                "image-cat-".$category->tipo.".jpg",
+                "public"
+            );
         $category->cover_image = $cover_image;
+
+        }
+
+
         $category->push();
         return back()->with('message', 'Categoria modificata');
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $bikes = Bike::findOrFail($id);
