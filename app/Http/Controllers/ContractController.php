@@ -180,40 +180,56 @@ class ContractController extends Controller
         $carbonEnd = Carbon::parse($endDate);
         $differenza = $carbonEnd->diffInDays($carbonStart);
         $price = 0;
+
+
+
         foreach ($contract->bike as $key) {
             // dd($key);
             if ($differenza <= 1) {
                 $price += $key->category->base;
+        
+                
             } elseif ($differenza == 2) {
                 $price += $key->category->twoDay;
+        
                 
             } elseif ($differenza == 3) {
                 $price += $key->category->threeDay;
+        
+
             } elseif ($differenza == 4) {
                 $price += $key->category->fourDay;
+        
+
             } elseif ($differenza == 5) {
                 $price += $key->category->fiveDay;
+        
+
             } elseif ($differenza == 6) {
                 $price += $key->category->sixDay;
+        
+
             } elseif ($differenza == 7) {
                 $price += $key->category->sevenDay;
+        
+
             } elseif($differenza > 7) {
                 $overpriceDiff = $differenza - 7;
                 $sette = $key->category->sevenDay;
                 $surplus = $key->category->overprice * $overpriceDiff;
                 $price += $sette + $surplus;
-                // dd($price);
+                
 
             }
 
             
-
+            $contract->costo = $price;
+            $contract->push();
 
         }
-        // dd($price);
-        $contract->costo = $price;
-        $contract->push();
+            dd($price);
 
+        // dd($key);
         return redirect()->route('contractShow', $contract);
     }
 
