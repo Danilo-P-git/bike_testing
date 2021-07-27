@@ -8,8 +8,9 @@
             <h4>{{__('payment.page.subtitle')}}</h4>
         </div>
     </div>
-    
-
+    @if(Session::has('message'))
+    <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+    @endif
     <form action="{{route('bookingAvaliable')}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
@@ -75,7 +76,7 @@
                                             </div>
                                             <div class="number-drop" style="display: none">
                                                 <label for="quantity{{$cat->id}}">Nome</label>
-                                                <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control" value="1" >
+                                                <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control" value="0" >
                                             </div>
                                         </div>
                                         @endforeach
@@ -215,7 +216,7 @@
                
             }
 
-            $(this).siblings('.number-drop').toggle();
+            $(this).siblings('.number-drop').toggle(400);
         })
     });
 </script>

@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container d-flex flex-column">
-        <h2>Ricerca per giorno {{$today}}</h2>
+        <h2>Ricerca per giorno {{$dataOggi}}</h2>
 
     @if(Session::has('message'))
     <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
@@ -14,7 +14,7 @@
             @method('POST')
 
             <label for="data">Controlla disponibilità</label>
-            <input class="form-control" name="data" id="data" type="date" value="{{$today}}">
+            <input class="form-control" name="data" id="data" type="date" value="{{$dataOggi}}">
 
             <button class="btn btn-primary" type="submit">Check</button>
         </form>
@@ -252,7 +252,7 @@
                 <p class="card-text"> <strong> Contratti Attivi </strong></p>
                 @foreach ($bike->contract as$contract )
 
-                @if ($contract->data_inizio <= $today && $contract->data_fine >= $today )
+                @if ($contract->data_inizio <= $dataOggi && $contract->data_fine >= $dataOggi )
                     <a href="{{route('contractShow', $contract->id)}}">Contratto {{$contract->cognome}}</a>
                     {{-- <p class="card-text">id = {{$contract->id}}</p> --}}
 

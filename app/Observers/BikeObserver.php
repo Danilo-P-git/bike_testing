@@ -19,18 +19,20 @@ class BikeObserver
         if (count($bike->contract)>0) {
             foreach ($bike->contract as $contract) {
                 $end_date = $contract->data_fine;
+                $carbonEnd = Carbon::createFromFormat('Y-m-d',$end_date);
                 $start_date = $contract->data_inizio;
-                // dd($end_date."////".$start_date."////".$today);
-                // dd($bike->contract);
-                // dd($today>$start_date && $today<$end_date);
-                if ($today>=$start_date && $today<=$end_date) {
+                $carbonStart = Carbon::createFromFormat('Y-m-d',$start_date);
+                $check = Carbon::now()->between($carbonStart,$carbonEnd);
+                // dd($check);
+                if ($check) {
                     $bike->bloccata = 1;
-                    $bike->push();
+                    
                 
                 } else {
+
                     $bike->bloccata = 0;
-                    $bike->push();
                 }
+                $bike->push();
             }
         }
     }

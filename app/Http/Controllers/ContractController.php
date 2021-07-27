@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use PDF;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Http;
-set_time_limit(300);
+// set_time_limit(300);
 class ContractController extends Controller
 {
     
@@ -123,7 +123,7 @@ class ContractController extends Controller
 
     public function bikeChosing($id)
     {
-        $today = Carbon::now()->format('Y-m-d');
+        // $today = Carbon::now()->format('Y-m-d');
 
         $contract = Contract::with('bike')->find($id);
         // dd($contract->data_inizio);
@@ -132,14 +132,36 @@ class ContractController extends Controller
             ])->get();
         // dd($contract);
         // dd($bikes);
+        // dd(gettype($contract->data_inizio));
+
         $biciCorretta = array();
         $biciSbagliata= array();
         foreach ($bikes as $bike) {
             if (count($bike->contract) > 0) {
                 foreach ($bike->contract as $contrattoEsistente) {
-                    $startDate = $contract->data_inizio;
-                    $endDate =  $contract->data_fine;
-                    if ($contract->data_inizio <= $contrattoEsistente->data_fine && $contract->data_fine >= $contrattoEsistente->data_inizio) {
+
+
+                    $contrattoCreatoInizio = $contract->data_inizio;
+
+                    $carbonStart = Carbon::createFromFormat('Y-m-d',$contrattoCreatoInizio);
+
+                    $contrattoCreatoFine =  $contract->data_fine;
+
+                    $carbonEnd = Carbon::createFromFormat('Y-m-d',$contrattoCreatoFine);
+                    
+                    $contrattoEsistenteStart = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_inizio);
+
+                    $contrattoEsistenteEnd= Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_fine);
+
+                    // $check1 = $contrattoEsistenteStart->between($carbonStart,$carbonEnd);
+
+                    // $check2 = $contrattoEsistenteEnd->between($carbonStart,$carbonEnd);
+
+                    $check1 = $carbonStart->lte($contrattoEsistenteEnd);
+                    $check2 = $carbonEnd->gte($contrattoEsistenteStart);
+
+                    if ($check1 && $check2) {
+                        // dd('giusto');
                         $errore = "Bici non disponibile per quelle date";
                         array_push($biciSbagliata, $bike);
                     }   else {
@@ -167,22 +189,27 @@ class ContractController extends Controller
 
     public function bikeStoring(Request $request, $id){
 
+        // dd($request);
 
         $contract = Contract::with('bike.category')->find($id);
 
 
 
+        foreach ($request->bike as $bike) {
+            $contract->bike()->attach($bike);
+        }
+        $contract->load('bike');
+       
+        // dd($contract);
 
-        $contract->bike()->sync($request->bike);
-
+        $contract->save();
         $startDate = $contract->data_inizio;
         $endDate = $contract->data_fine;
         $carbonStart = Carbon::parse($startDate);
         $carbonEnd = Carbon::parse($endDate);
         $differenza = $carbonEnd->diffInDays($carbonStart);
         $price = 0;
-
-
+        // dd($contract->bike);
 
         foreach ($contract->bike as $key) {
             // dd($key);
@@ -228,7 +255,11 @@ class ContractController extends Controller
             $contract->push();
 
         }
-            dd($price);
+
+
+        // dd($price);
+
+       
 
         // dd($key);
         return redirect()->route('contractShow', $contract);

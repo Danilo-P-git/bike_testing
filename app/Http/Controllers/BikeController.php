@@ -21,21 +21,32 @@ class BikeController extends Controller
         
 
         if ($request->has('data')) {
-            $today = $request->data;
+            $dataOggi = $request->data;
+            $today =Carbon::createFromFormat('Y-m-d', $dataOggi);
             // $difference = 1;
 
         } else {
-            $today = Carbon::now()->format('Y-m-d');
+            $today = Carbon::now();
+            $dataOggi = $today->format('Y-m-d');
         }
 
         $categories = Category::all();
         $bikes = Bike::all();
+
+
         foreach ($bikes as $bike) {
             if (count($bike->contract)>0) {
                 foreach ($bike->contract as $contract) {
                     $end_date = $contract->data_fine;
+                    $carbonEnd = Carbon::createFromFormat('Y-m-d',$end_date);
+
                     $start_date = $contract->data_inizio;
-                    if ($today>=$start_date && $today<=$end_date) {
+
+                    $carbonStart = Carbon::createFromFormat('Y-m-d',$start_date);
+
+                    $check = $today->between($carbonStart,$carbonEnd);
+
+                    if ($check) {
                         $bike->setRelation('temp', 1);
                         // dd($bike);
 
@@ -46,7 +57,7 @@ class BikeController extends Controller
                 }
             }
         }
-        return view('bike.bikeIndex', compact('bikes', 'categories', 'today'));
+        return view('bike.bikeIndex', compact('bikes', 'categories', 'dataOggi'));
 
     }
 
