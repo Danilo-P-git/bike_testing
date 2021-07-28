@@ -9,7 +9,7 @@
 
                 <div class="card-body">
                     <h1>EH VOLEVI</h1>
-                    {{-- <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('register') }}">
                         @csrf
 
                         <div class="form-group row">
@@ -69,7 +69,7 @@
                                 </button>
                             </div>
                         </div>
-                    </form> --}}
+                    </form>
                 </div>
             </div>
         </div>
