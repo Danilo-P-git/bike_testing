@@ -43,7 +43,7 @@
 
                 $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
                 $postUrl = "http://localhost:8000/booking/details";
-                $merchantServerUrl = "http://localhost:8000/booking/confirm";
+                $merchantServerUrl = "http://localhost:8000/booking/done";
 
                 $codTrans = $contract->id;
                 $divisa = "EUR";
@@ -74,11 +74,14 @@
                 
             
             @endphp
-            <form action="{{$requestUrl}}">
+            <form action="{{route('bookingDelete')}}">
+            <button type="submit" name="annulla" value="{{$contract->id}}" class="btn btn-secondary text-center w-50" style="height: 100px;width: 100px;">Annulla Prenotazione</button>
+            </form>
+            <form action="{{$requestUrl}}" method="POST">
                 @foreach ($requestParams as $name => $value) 
-                    <input type='hidden' name='{{$name}}' value='{{$value}}' />
+                    <input type='hidden' name='{{$name}}' value='{{$value}}'/>
                 @endforeach
-                <button class="btn btn-secondary text-center w-100" style="height: 200px;width: 200px;">Conferma pagamento</button>
+                <button class="btn btn-secondary text-center w-50 mt-5" style="height: 100px;width: 100px;">Conferma pagamento</button>
 
             </form>
 
@@ -86,6 +89,7 @@
     </div>
 
 </div>
+
 
 
 

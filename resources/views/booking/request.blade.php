@@ -42,7 +42,7 @@
                                 <div class="col-12 ">
                                     <div class="row d-flex no-gutters  flex-wrap">
                                         @foreach ($category as $cat)
-
+                                        
                                         <div class="col pb-5 m-1 ">
 
                                             <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" >
@@ -51,10 +51,24 @@
                                                 <input class="cat-id" type="number" value="{{$cat->id}}" hidden>
                                                 <input class="id-cat" type="checkbox" name="category[]" id="category" value="{{$cat->id}}" hidden>
                                                 <img class="card-img-top p-3" src="{{asset('storage/'.$cat->cover_image)}}" alt="">
-                                                <div class="card-body">
+                                                <div class="card-body my-n3">
                                                     <h3 class="card-title">{{$cat->tipo}}</h3>
+                                                    <?php 
+                                                    $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
+                                                        foreach ($categoryId as $key) {
+            
+                                                            //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
+                                                            $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
+                                                        }
+                                                    ?>
+                                                    @foreach ($quantity as $item=>$val)
+                                                        @if ($item==$cat->id)
+                                                            
+                                                        <h3 class="card-title">Disponibilità: {{$val}}</h3>
+                                                        @endif
+                                                    @endforeach
                                                     
-                                                    <button class="btn btn-primary drop"  type="button"> {{__('payment.page.price')}}</button>
+                                                    <button class="btn btn-primary drop mt-n1"  type="button"> {{__('payment.page.price')}}</button>
 
                                                     <div class="show-drop" style="display: none">
                                                         <h3 class="text-center my-1">{{__('payment.page.price')}}</h3>
