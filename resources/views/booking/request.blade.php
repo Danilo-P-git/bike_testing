@@ -210,7 +210,7 @@
             
             "url": "http://localhost:8000/api/price",
             "data": {
-                "numberDay": date1
+                "numberDay": diffDays
             },
             "method": "GET",
             success: function (response) {
