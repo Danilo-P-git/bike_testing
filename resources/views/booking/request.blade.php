@@ -33,6 +33,7 @@
                                             <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                                             </div>
                                             <input type="text" class="form-control" id="range_date" name="range_date" placeholder="inserisci un dato">
+                                            {{-- <button class="btn btn-primary" name="range_date" type="submit">Controlla disponibilita</button> --}}
                                         </div>
                                         
                                     </div>
@@ -44,29 +45,32 @@
                                         @foreach ($category as $cat)
                                         
                                         <div class="col pb-5 m-1 ">
-
-                                            <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" >
+                                            <?php 
+                                            $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
+                                                foreach ($categoryId as $key) {
+    
+                                                    //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
+                                                    $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
+                                                }
+                                            ?>
+                                            <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" > 
+                                                @foreach ($quantity as $item=>$val)
+                                                @if ($item==$cat->id) 
+                                                <p class="m-3" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">x{{$val}}</p> 
+                                                @endif
+                                                @endforeach
                                                 <p class="check position-absolute" style="display: none"><i class="fa fa-check" aria-hidden="true"></i></p>
 
                                                 <input class="cat-id" type="number" value="{{$cat->id}}" hidden>
                                                 <input class="id-cat" type="checkbox" name="category[]" id="category" value="{{$cat->id}}" hidden>
                                                 <img class="card-img-top p-3" src="{{asset('storage/'.$cat->cover_image)}}" alt="">
                                                 <div class="card-body my-n3">
-                                                    <h3 class="card-title">{{$cat->tipo}}</h3>
-                                                    <?php 
-                                                    $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
-                                                        foreach ($categoryId as $key) {
-            
-                                                            //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
-                                                            $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
-                                                        }
-                                                    ?>
-                                                    @foreach ($quantity as $item=>$val)
-                                                        @if ($item==$cat->id)
+                                                    <h3 class="card-title" style="text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{$cat->tipo}}</h3>
+
+
                                                             
-                                                        <h3 class="card-title">Disponibilità: {{$val}}</h3>
-                                                        @endif
-                                                    @endforeach
+                                                        {{-- <h3 class="card-title">Disponibilità: {{$val}}</h3> --}}
+
                                                     
                                                     <button class="btn btn-primary drop mt-n1"  type="button"> {{__('payment.page.price')}}</button>
 
@@ -206,7 +210,7 @@
             
             "url": "http://localhost:8000/api/price",
             "data": {
-                "numberDay": diffDays
+                "numberDay": date1
             },
             "method": "GET",
             success: function (response) {

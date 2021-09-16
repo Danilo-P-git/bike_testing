@@ -72,12 +72,17 @@
     .cat {
         cursor: pointer;
         width: 220px;
-        height: 18rem;
-        transition: 0.5s;
+        height: 19rem;
+        border-radius: 20px;
+        box-shadow:3px 7px 8px rgba(150, 150, 150, 1);
+        transition:all 1.5s;
         &:hover {
-            -webkit-box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
-            -moz-box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
-            box-shadow: 0px 0px 10px 0px rgba(206,46,48,1);
+            
+            cursor: pointer;
+            box-shadow: 0px 12px 30px 0px #ce2e30;
+            transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+            
+            
 
         }
         .show-drop {
@@ -86,10 +91,11 @@
             left: 50%;
             transform: translate(-50%, -50%);
             width: 220px;
-            height: 18rem;
+            height: 19rem;
+            border-radius: 20px;
             background-color: rgba(206,46,48,0.95);
             
-            border-radius: 5px;
+            
             padding: 0 15px;
             color: #fff;
             p {

@@ -133,6 +133,7 @@ class UserBooking extends Controller
                         // 
                         // ciclo i loro contratti
                         foreach ($bike->contract as $contrattoEsistente) {
+                            dd($contrattoEsistente);
                             // faccio una validazione dove vedo se le date immesse dal cliente hanno bici disponibili
                             $contrattoEsistenteStart = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_inizio);
 
@@ -345,5 +346,9 @@ class UserBooking extends Controller
 
         }
         return view('booking.done', compact('esito','codiceTrans','codAut','message','contratto','dettagliContratto','contract'));
+    }
+
+    public function checkBike(Request $request){
+        dd($request);
     }
 }
