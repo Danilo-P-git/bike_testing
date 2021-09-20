@@ -56,7 +56,7 @@
                                             <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" > 
                                                 @foreach ($quantity as $item=>$val)
                                                 @if ($item==$cat->id) 
-                                                <p class="m-3" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">x{{$val}}</p> 
+                                                <p class="m-3" id="numberqty" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{-- x{{$val}} --}}</p> 
                                                 @endif
                                                 @endforeach
                                                 <p class="check position-absolute" style="display: none"><i class="fa fa-check" aria-hidden="true"></i></p>
@@ -179,6 +179,7 @@
     });
 
     $('#range_date').on('change', function(){
+        
         var data = $(this).val();
         var split = data.split(' - ');
         var startDate = split[0];
@@ -218,6 +219,22 @@
 
             }
         });
+        $.ajax({
+            
+            "url": "bookingCheck",
+            "data": {
+                "start": startCorrect,
+                "end":endCorrect
+                
+            },
+            "method": "GET",
+            success: function (data) {
+                console.log(data);
+                document.getElementById('numberqty').innerHTML=data;
+                /* $('#numberqty').html(response.html); */
+
+            }
+        });
     });
 
     $(document).ready(function() {
@@ -237,5 +254,6 @@
             $(this).siblings('.number-drop').toggle(400);
         })
     });
+    
 </script>
 @endsection

@@ -47,7 +47,7 @@ Route::put('/contract/update{id}','App\Http\Controllers\ContractController@updat
 // Route::put('/contract/manutenzione{id}', 'App\Http\Controllers\ContractController@manutenzione')->name('contractManutenzione')->middleware('auth');
 Route::delete('/contract/delete{id}', 'App\Http\Controllers\ContractController@destroy' )->name('contractDelete')->middleware('auth');
 Route::any('/booking/select', 'App\Http\Controllers\UserBooking@select')->name('bookingSelect')->middleware('lang');
-/* Route::any('/booking/checked', 'App\Http\Controllers\UserBooking@checkBike')->name('bookingCheck')->middleware('lang'); */
+Route::get('/booking/bookingCheck', 'App\Http\Controllers\UserBooking@checkBike')->name('bookingCheck')->middleware('lang');
 Route::any('/booking/available','App\Http\Controllers\UserBooking@available')->name('bookingAvaliable')->middleware('lang');
 Route::any('/booking/delete','App\Http\Controllers\UserBooking@deleteContract')->name('bookingDelete')->middleware('lang');
 Route::get('/booking/done','App\Http\Controllers\UserBooking@donePay')->name('booking.done')->middleware('lang');

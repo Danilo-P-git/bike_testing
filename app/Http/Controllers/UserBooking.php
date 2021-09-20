@@ -25,11 +25,6 @@ class UserBooking extends Controller
             
             //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
             $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
-            
-
-            
-            
-            
         }
         /* dd($categoryId); */
         
@@ -133,7 +128,7 @@ class UserBooking extends Controller
                         // 
                         // ciclo i loro contratti
                         foreach ($bike->contract as $contrattoEsistente) {
-                            dd($contrattoEsistente);
+                            /* dd($contrattoEsistente); */
                             // faccio una validazione dove vedo se le date immesse dal cliente hanno bici disponibili
                             $contrattoEsistenteStart = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_inizio);
 
@@ -146,7 +141,7 @@ class UserBooking extends Controller
 
                             if ($check1 && $check2) {
 
-                                return back()->with('message', 'Bici non disponibili in quelle date' .$bike->id);
+                                return back()->with('message', 'Bici '.$bike->Category->tipo.' non disponibili in quelle date');
 
                             }   else {
                                 array_push($biciCorretta, $bike);
@@ -349,6 +344,58 @@ class UserBooking extends Controller
     }
 
     public function checkBike(Request $request){
-        dd($request);
+        $date1=Carbon::parse($request->start)->format('Y-m-d');
+        $date2=Carbon::parse($request->end)->format('Y-m-d');
+        
+//TEST
+        $contract=DB::table('contracts')->get();
+        $contractdate=DB::table('contracts')->where([['data_inizio','=',$date1],['data_fine','=',$date2]])->get();
+        foreach ($contractdate as $key) {
+            $id=$key->id;
+        }
+        $bikeContract=DB::table('bike_contract')->where('contract_id','=',$id)->get();
+
+        foreach ($bikeContract as $key) {
+            $bikeselect[$key->id]=DB::table('bikes')->where('id','=',$key->bike_id)->get();
+            /* $idcateg[$key->id]=$bikeselect[$key->id]->category_id; */
+        }
+
+        foreach ($bikeselect[$key->id] as $key) {
+            $idcat=$key->category_id;
+            $quantity=DB::table('bikes')->select('category_id')->whereNotIn('category_id',[$idcat])->get();
+        }
+        foreach ($quantity as $key) {
+            $qty[$key->category_id]=DB::table('bikes')->where('category_id','=',$key->category_id)->count('*');
+        }
+        
+        $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
+        
+        $bikes = Bike::all();
+
+/*         foreach ($bikes as $bike) {
+                    
+            // se hanno dei contratti 
+            if (count($bike->contract) > 0) {
+                // 
+                // ciclo i loro contratti
+                foreach ($bike->contract as $contrattoEsistente) {
+
+                    $contrattoEsistenteStart = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_inizio);
+
+                    $contrattoEsistenteEnd = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_fine);
+
+                        foreach ($categoryId as $key) {
+            
+                            //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
+                            $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
+
+
+                    }
+                }
+            } 
+        } */
+// FINE TEST        
+        
+        return response()->json(["QUANTITY"=>$qty]);
     }
 }
