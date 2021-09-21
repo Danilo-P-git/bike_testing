@@ -56,7 +56,7 @@
                                             <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" > 
                                                 @foreach ($quantity as $item=>$val)
                                                 @if ($item==$cat->id) 
-                                                <p class="m-3" id="numberqty" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{-- x{{$val}} --}}</p> 
+                                                <p class="m-3" id="numberqty" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">x{{$val}}</p> 
                                                 @endif
                                                 @endforeach
                                                 <p class="check position-absolute" style="display: none"><i class="fa fa-check" aria-hidden="true"></i></p>
@@ -228,9 +228,9 @@
                 
             },
             "method": "GET",
-            success: function (data) {
-                console.log(data);
-                document.getElementById('numberqty').innerHTML=data;
+            success: function (response) {
+                console.log(response);
+                /* document.getElementById('numberqty').innerHTML=data; */
                 /* $('#numberqty').html(response.html); */
 
             }
