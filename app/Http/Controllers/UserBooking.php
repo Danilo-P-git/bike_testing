@@ -35,40 +35,36 @@ class UserBooking extends Controller
 
     public function available(Request $request)
     {
+
+
         
         $data = $request->all();
-        
         $newData = array();
-        
+
         $categoryArr = array();
-        
+
         // manipolo la request per pulirla e salvarmi un altro array da utilizzare dopo
         
         foreach ($data as $key => $value) {
-        /* dd($value); */
-            
+
             if ($value == 0) {
                 
             } else {
-                
+
                 $newData[$key] = $value;
-                /* dd($newData); */
-                
+
             }
-            
+
         }
-        /* dd($newData); */
     
 
         // ciclo la request e verifico con il nuovo array le categorie e creo un nuovo array con $key == id categoria && $value == quantita ordianata 
         foreach ($data as $key => $value) {
-            
+        
+
             foreach ($newData['category'] as $key2 => $value2) {
-                
                 if ($value2 == $key ) {
-                    
                     $categoryArr[$value2] = $value;
-                    
                 }
             }
 
@@ -100,57 +96,44 @@ class UserBooking extends Controller
         // Dichiaro i due array delle bici 
         $biciCorretta = array();
         $biciSbagliata= array();
-        
         // Ciclo l'array delle categorie 
         foreach ($categoryArr as $key => $value) {
-            
-            for ($i=0; $i <count($categoryArr) ; $i++) { 
-                $category[$i] = Category::find($key);
-                
-            
-            /* dd($category); */
-            
-        
+
+
+            $category = Category::find($key);
+
+
             // Per ogni iterazione faccio una query e limito le risposte di questa query in base alla quantità che mi hanno mandato
             $bikes = Bike::with('category')->where([
                 ['manutenzione', '=', 0],
                 ['category_id', '=', $key],
-                ])->get();
-              
-                /* dd($bikes); */
+            ])->get();
+
             // 
             if (count($bikes) < $value) {
-                return back()->with('message', 'Quantità maggiore delle bici disponibili '.$category[$i]->tipo);
+                return back()->with('message', 'Quantità maggiore delle bici disponibili '.$category->tipo);
             } else {
                 // ciclo le bici trovate
                 foreach ($bikes as $bike) {
-                    
                     // se hanno dei contratti 
                     if (count($bike->contract) > 0) {
                         // 
                         // ciclo i loro contratti
                         foreach ($bike->contract as $contrattoEsistente) {
-                            /* dd($contrattoEsistente); */
                             // faccio una validazione dove vedo se le date immesse dal cliente hanno bici disponibili
                             $contrattoEsistenteStart = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_inizio);
 
                             $contrattoEsistenteEnd = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_fine);
 
-                            
                             $check1 = $bookingStart->lte($contrattoEsistenteEnd);
                             $check2 = $bookingEnd->gte($contrattoEsistenteStart);
-                            
-                            /* dd($contrattoEsistente->pivot->bike_id); */
-                            
 
                             if ($check1 && $check2) {
 
-                                return back()->with('message', 'Bici '.$bike->Category->tipo.' non disponibili in quelle date');
+                                // return back()->with('message', 'Bici non disponibili in quelle date'.$bike->id);
 
                             }   else {
                                 array_push($biciCorretta, $bike);
-                                
-                                
         
                                 
         
@@ -165,24 +148,19 @@ class UserBooking extends Controller
                 }
             }
         }
-        }
         // dd($biciCorretta);
         // dichiaro l'array delle bici che selezionerò
         $biciSelezionata = array();
         // dd($categoryArr);
         // ciclo di nuovo l'array delle categorie 
         foreach ($categoryArr as $key => $value) {
-            /* dd($categoryArr); */
-            
             // dichiaro un contatore per la quantita di bici che debbo trovare 
             $cont = 1;
-            
             
             foreach ($biciCorretta as $chiave => $valore) {
                 // incremento il contatore di base da 0 a 1 
                 // $cont ++ ;
 
-                
                 $biciSingola = $valore;
       
                 // se la categoria della bici singola è corretta e la quantita ($value) è inferiore o uguale al contatore 
@@ -199,7 +177,7 @@ class UserBooking extends Controller
             
         }
 
-        /* dd($biciSelezionata); */
+        // dd($biciSelezionata);
 
         // Gestione Costi
 
@@ -208,7 +186,6 @@ class UserBooking extends Controller
         $price = 0;
 
         foreach ($biciSelezionata as $key) {
-            
         //    
             if ($diffDays <= 1) {
                 $price += $key->category->base;
@@ -267,7 +244,7 @@ class UserBooking extends Controller
         $contract->costo = $price;
         $contract->save();
         foreach ($biciSelezionata as $biciDaAttaccare) {
-            
+
             $contract->bike()->attach($biciDaAttaccare->id);
             
         }
