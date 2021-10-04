@@ -9,43 +9,46 @@
         </div>
     </div>
     @if(Session::has('message'))
-    <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
+    <p class="alert {{ Session::get('alert-class', 'alert-danger') }} text-center">{{ Session::get('message') }}</p>
     @endif
     <form action="{{route('bookingAvaliable')}}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('POST')
 
-        <div class="container">
+        <div class="container-fluid" style="max-width: 90%">
             <div class="row no-gutters">
             
                
 
                     {{-- seleziona --}}
-                    <div class="col-sm-8 col-12 bg-light shadow pt-2 pl-3">
-                            <div class="row">
+                    <div class="col-sm-9 col-12 bg-light shadow pt-2 pl-3">
+                            <div class="row justify-content-center">
                                 <div class="col-sm-12 col-md-6 col-12">
-                                    <h3>
+                                    <h3 class="text-center">
                                         {{__('payment.page.date')}}
                                     </h3>
                                     <div class="pt-2">
-                                        <div class="input-group mb-2">
+                                        <div class="input-group mb-2 justify-content-center">
                                             <div class="input-group-prepend">
                                             <div class="input-group-text"><i class="fas fa-calendar-alt"></i></div>
                                             </div>
-                                            <input type="text" class="form-control" id="range_date" name="range_date" placeholder="inserisci un dato">
+                                            <input type="text" class="form-control text-center" id="range_date" name="range_date" placeholder="inserisci un dato" style="max-width: 35%">
                                             {{-- <button class="btn btn-primary" name="range_date" type="submit">Controlla disponibilita</button> --}}
                                         </div>
-                                        
+                                        <p class="text-center"><strong>* modifica le date per verificare la disponibilità delle bici in quei giorni</strong></p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-12 ">
+                            <div class="row" style="margin-top: 10%">
+                                <div class="col col-md-12">
                                     <div class="row d-flex no-gutters  flex-wrap">
-                                        @foreach ($category as $cat)
                                         
-                                        <div class="col pb-5 m-1 ">
+                                        @foreach ($category as $cat)
+                                        <div class="col pb-5 m-1">
+                                            <input type="text" id="idcat" value="idcat_{{$cat->id}}" hidden>
                                             <?php 
+                                            
+                                            
                                             $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
                                                 foreach ($categoryId as $key) {
     
@@ -53,26 +56,31 @@
                                                     $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
                                                 }
                                             ?>
-                                            <div class="card cat m-auto position-relative " id="cat{{$cat->id}}" > 
-                                                @foreach ($quantity as $item=>$val)
-                                                @if ($item==$cat->id) 
-                                                <p class="m-3" id="numberqty" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">x{{$val}}</p> 
-                                                @endif
-                                                @endforeach
+                                            <div class="card cat m-auto position-relative "  >
+                                                
+                                                {{-- @foreach ($quantity as $item=>$val)
+                                                @if ($item==$cat->id)  --}}
+                                                <p class="m-3 numberqty" id="cat{{$cat->id}}" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);"></p> 
+                                                {{-- @endif
+                                                @endforeach --}}
                                                 <p class="check position-absolute" style="display: none"><i class="fa fa-check" aria-hidden="true"></i></p>
 
                                                 <input class="cat-id" type="number" value="{{$cat->id}}" hidden>
                                                 <input class="id-cat" type="checkbox" name="category[]" id="category" value="{{$cat->id}}" hidden>
                                                 <img class="card-img-top p-3" src="{{asset('storage/'.$cat->cover_image)}}" alt="">
                                                 <div class="card-body my-n3">
-                                                    <h3 class="card-title" style="text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{$cat->tipo}}</h3>
+                                                    <h3 class="card-title text-center" style="text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{$cat->tipo}}</h3>
 
 
                                                             
                                                         {{-- <h3 class="card-title">Disponibilità: {{$val}}</h3> --}}
+                                                            
+                                                                <button class="btn btn-primary pl-5 pr-5 ml-5 drop"  type="button">{{__('payment.page.price')}}</button>
+
+                                                                <button class="btn btn-primary pl-5 pr-5"  type="button">Dettagli</button>
 
                                                     
-                                                    <button class="btn btn-primary drop mt-n1"  type="button"> {{__('payment.page.price')}}</button>
+                                                    
 
                                                     <div class="show-drop" style="display: none">
                                                         <h3 class="text-center my-1">{{__('payment.page.price')}}</h3>
@@ -84,6 +92,7 @@
                                                         <p class="text-center">   {{__('payment.page.5day')}} {{$cat->fiveDay}}</p> <hr>
                                                         <p class="text-center">     {{__('payment.page.6day')}} {{$cat->sixDay}}</p> <hr>
                                                         <p class="text-center">   {{__('payment.page.7day')}} {{$cat->sevenDay}}</p>
+                                                        <p class="text-center">   {{$cat->overprice}} {{__('payment.page.overprice')}}</p>
                                                         {{-- <p>{{$cat->overprice}}</p> --}}
 
                                                     </div>
@@ -93,7 +102,7 @@
 
                                             </div>
                                             <div class="number-drop" style="display: none">
-                                                <label for="quantity{{$cat->id}}">Nome</label>
+                                                <i class="fas fa-shopping-cart" style="color: #ce2e30"><label for="quantity{{$cat->id}}"></label></i>
                                                 <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control" value="0" >
                                             </div>
                                         </div>
@@ -108,7 +117,7 @@
 
                     {{-- dati e richiedi disponibilità --}}
 
-                    <div class="col-sm-4 col-12 bg-primary shadow pt-2 text-white ">
+                    <div class="col-sm-3 col-12 bg-primary shadow pt-2 text-white ">
                         <h2 class="text-center text-uppercase py-3">{{__('payment.page.dispTitle')}}</h2>
                         <hr class="border border-white ">
                         <div class="mx-lg-5 mx-2 py-2">
@@ -224,15 +233,21 @@
             "url": "bookingCheck",
             "data": {
                 "start": startCorrect,
-                "end":endCorrect
+                "end":endCorrect,
+                "numberDay": diffDays
                 
             },
             "method": "GET",
             success: function (response) {
                 console.log(response);
-                /* document.getElementById('numberqty').innerHTML=data; */
-                /* $('#numberqty').html(response.html); */
-
+                //costruisco oggetto javascript da response json
+                let res = JSON.stringify(response);
+                let respons = JSON.parse(res);
+                
+                //ciclo la risposta per ottenere id e quantita corrispondenti e le assegno all'id della vista    
+               $.each(respons['qty'],function(id,quantity){
+                   $('#cat'+id).text('Disponibilita: '+quantity); 
+                });
             }
         });
     });

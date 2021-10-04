@@ -71,8 +71,8 @@
 
     .cat {
         cursor: pointer;
-        width: 220px;
-        height: 19rem;
+        width: 420px;
+        height: 27rem;
         border-radius: 20px;
         box-shadow:3px 7px 8px rgba(150, 150, 150, 1);
         transition:all 1.5s;
@@ -90,8 +90,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 220px;
-            height: 19rem;
+            width: 420px;
+            height: 27rem;
             border-radius: 20px;
             background-color: rgba(206,46,48,0.95);
             
@@ -106,5 +106,87 @@
             }
         }
     }
+    @media only screen and (max-width: 600px) {
+        .cat {
+            cursor: pointer;
+            width: 290px;
+            height: 25rem;
+            border-radius: 20px;
+            box-shadow:3px 7px 8px rgba(150, 150, 150, 1);
+            transition:all 1.5s;
+            &:hover {
+                
+                cursor: pointer;
+                box-shadow: 0px 12px 30px 0px #ce2e30;
+                transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+                
+                
+    
+            }
+            .show-drop {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 290px;
+                height: 25rem;
+                border-radius: 20px;
+                background-color: rgba(206,46,48,0.95);
+                
+                
+                padding: 0 15px;
+                color: #fff;
+                p {
+                    margin-bottom: 5px !important;
+                }
+                hr {
+                    margin: 5px !important;
+                }
+            }
+        }
+      }
+      @media only screen and (max-width: 400px) {
+        .cat {
+            cursor: pointer;
+            width: 190px;
+            height: 20rem;
+            border-radius: 20px;
+            box-shadow:3px 7px 8px rgba(150, 150, 150, 1);
+            transition:all 1.5s;
+            &:hover {
+                
+                cursor: pointer;
+                box-shadow: 0px 12px 30px 0px #ce2e30;
+                transition: all 800ms cubic-bezier(0.19, 1, 0.22, 1);
+                
+                
+    
+            }
+            .show-drop {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 190px;
+                height: 20rem;
+                border-radius: 20px;
+                background-color: rgba(206,46,48,0.95);
+                
+                
+                padding: 0 15px;
+                color: #fff;
+                p {
+                    margin-bottom: 5px !important;
+                }
+                hr {
+                    margin: 5px !important;
+                }
+            }
+            button.drop{
+                margin-left: 0px!important;
+                margin-bottom: 10px;
+            }
+        }
+      }
 
 }

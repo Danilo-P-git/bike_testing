@@ -29,6 +29,7 @@ return [
         '5day'=> '5 days',
         '6day'=> '6 days',
         '7day'=> '7 days',
+        'overprice'=> ' € more for day',
         'dispTitle'=>'Request availability'
 
     ]

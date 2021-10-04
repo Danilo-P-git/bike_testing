@@ -29,6 +29,7 @@ return [
         '5day'=> '5 giorni',
         '6day'=> '6 giorni',
         '7day'=> '7 giorni',
+        'overprice'=> ' € in piu al giorno',
         'dispTitle'=>'Richiedi disponibilità'
 
     ]
