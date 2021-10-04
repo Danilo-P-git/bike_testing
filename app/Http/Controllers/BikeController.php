@@ -248,13 +248,20 @@ class BikeController extends Controller
 
     public function manutenzione(Request $request, $id)
     {
+        /* dd($request); */
         if ($request->manutenzione == 'on') {
             $manutenzione = 1;
         } else {
             $manutenzione = 0;
         }
+        if ($request->bloccoesc=='on'){
+            $bloccata=1;
+        }else{
+            $bloccata = 0;
+        }
         $bike = Bike::find($id);
         $bike->manutenzione = $manutenzione;
+        $bike->bloccata = $bloccata;
         $bike->push();
 
         return redirect()->route('bikeIndex', $bike);

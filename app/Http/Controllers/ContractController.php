@@ -42,8 +42,8 @@ class ContractController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => "max:191",
-            'cognome' => "max:191",
+            'nome' => "required|max:191",
+            'cognome' => "required|max:191",
             'data_inizio'=>"required|date",
             'data_fine'=>"required|date",
             'tel'=>"required_without:mail",
@@ -366,6 +366,22 @@ class ContractController extends Controller
         $contract->path = '/storage/contract/'.$fileName;
         
         $contract->push();
+
+        return $pdf->download($fileName);
+    }
+
+    public function generaemptyPdf()
+    {
+        $today = Carbon::now()->format('Y-m-d');
+        
+        
+        // dd($contract);
+        $fileName = "contratto-empty.pdf";
+        $pdf = PDF::loadView('templatePdf.EmptycontractPdf');
+        /* Storage::put('public/contract/'.$pdf->output()); */
+        
+        
+        
 
         return $pdf->download($fileName);
     }

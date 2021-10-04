@@ -179,6 +179,10 @@
                                     <div class="alert alert-danger">{{$message}}</div>
                                 @enderror
                             </div>
+                            <div class="form-group col-md-4 col-12 mt-4">
+                                <button class="btn btn-danger" type="button"><a href="{{route('emptycontractPdf')}}" style="text-decoration:none;color:white;">Scarica Contratto vuoto</a></button>
+                            </div>
+                            
 
                             <div class="col-md-12">
 
@@ -201,7 +205,7 @@
                             <button id="save" class="btn btn-success">Save</button>
                         </div>
                     </form>
-                        
+                    
 
                </div>
 

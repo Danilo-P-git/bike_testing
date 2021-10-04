@@ -347,33 +347,17 @@ class UserBooking extends Controller
                 $idbike[$i]=$bikeContract[$i]->bike_id;
             }
 
-            $findbike=$bikes->except($idbike)->groupBy('category_id')->toArray();
-            
-            
-            
-
-            
+            $findbike=$bikes->except($idbike)->groupBy('category_id')->map->count('*');
             
         }
-            /* foreach ($bikeContract as $key) {
-                $bikeselect=DB::table('bikes')->where('id','=',$key->bike_id)->get();
-                
-            }
-    
-            foreach ($bikeselect as $key) {
-                $idcat=$key->category_id;
-                $quantity=DB::table('bikes')->select('category_id')->whereNotIn('category_id',[$idcat])->get();
-            }
-            foreach ($quantity as $key) {
-                $qty[$key->category_id]=DB::table('bikes')->where('category_id','=',$key->category_id)->count('*');
-            } */
+            
             return response()->json(["qty"=>$findbike]);
         } else {
             $categoryId=DB::table('categories')->select('id')->orderBy('id', 'asc')->get();
                 foreach ($categoryId as $key) {
             
                     //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
-                    $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
+                    $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->where('bloccata','=',0)->count('*');
                 }
                 /* return view('bookingSelect', compact('quantity')); */
         return response()->json(["qty"=>$quantity]);

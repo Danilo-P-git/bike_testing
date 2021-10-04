@@ -7,6 +7,14 @@
     @if(Session::has('message'))
     <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
     @endif
+    <div class="container ml-n3">
+        <div class="row">
+            <div class="col-12 mt-3">
+
+                <h1 class="btn btn-danger p-3 ms-n5"><a href="{{route('contractIndex')}}"style="text-decoration:none;color:white;">Vai a Contratti</a></h1>
+            </div>
+        </div>
+    </div>
     <h1 class="text-center">Tutte le bici</h1>
     <div class="col-auto ml-auto">
         <form action="{{route('bikeIndex')}}" method="POST" enctype="multipart/form-data">
@@ -244,7 +252,8 @@
 
     @foreach ($bikes as $bike)
 
-    <div class="card m-2" style="width: 18rem; @if ($bike->manutenzione == 1) background-color: red; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif">
+    <div class="card m-2" style="width: 18rem; @if ($bike->manutenzione == 1) background-color: red; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif
+        @if ($bike->bloccata == 1) background-color: green; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif">
         <div class="card-body">
             <h5 class="card-title">{{$bike->name}}</h5>
             @if (isset($bike->temp) && $bike->temp == 1)
@@ -269,6 +278,11 @@
                 <div class="custom-control custom-switch">
                     <input name="manutenzione" type="checkbox" class="custom-control-input" id="manutenzione{{$bike->id}}" @if($bike->manutenzione == 1 ) checked @endif @if(isset($bike->temp) && $bike->temp == 1) disabled @endif onchange="this.form.submit()">
                     <label class="custom-control-label" for="manutenzione{{$bike->id}}">Attiva manutenzione</label>
+                    <input class="submit" type="submit" hidden>
+                </div>
+                <div class="custom-control custom-switch">
+                    <input name="bloccoesc" type="checkbox" class="custom-control-input" id="bloccoesc{{$bike->id}}" @if($bike->bloccata == 1 ) checked @endif @if(isset($bike->temp) && $bike->temp == 1) disabled @endif onchange="this.form.submit()">
+                    <label class="custom-control-label" for="bloccoesc{{$bike->id}}">Attiva Blocco escursionista</label>
                     <input class="submit" type="submit" hidden>
                 </div>
 

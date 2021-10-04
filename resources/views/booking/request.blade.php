@@ -94,6 +94,8 @@
                                                         <p class="text-center">   {{__('payment.page.7day')}} {{$cat->sevenDay}}</p>
                                                         <p class="text-center">   {{$cat->overprice}} {{__('payment.page.overprice')}}</p>
                                                         {{-- <p>{{$cat->overprice}}</p> --}}
+                                                        <br>
+                                                        <p class="text-center" style="font-size: 1.5rem;">Chiudi</p>
 
                                                     </div>
 
@@ -239,10 +241,11 @@
             },
             "method": "GET",
             success: function (response) {
-                console.log(response);
+                
                 //costruisco oggetto javascript da response json
                 let res = JSON.stringify(response);
                 let respons = JSON.parse(res);
+                console.log(response);
                 
                 //ciclo la risposta per ottenere id e quantita corrispondenti e le assegno all'id della vista    
                $.each(respons['qty'],function(id,quantity){

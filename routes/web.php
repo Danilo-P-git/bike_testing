@@ -40,6 +40,7 @@ Route::any('/contract/signature/upload{id}', 'App\Http\Controllers\ContractContr
 Route::any('/contract/mail{id}', 'App\Http\Controllers\ContractController@sendMail')->name('contractMail')->middleware('auth');
 Route::any('/contract/sms{id}', 'App\Http\Controllers\ContractController@sendSms')->name('contractSms')->middleware('auth');
 Route::any('/contract/pdf{id}', 'App\Http\Controllers\ContractController@generaPdf')->name('contractPdf')->middleware('auth');
+Route::any('/contract/signature/pdfEmpty', 'App\Http\Controllers\ContractController@generaemptyPdf')->name('emptycontractPdf')->middleware('auth');
 
 Route::get('/contract/show{id}', 'App\Http\Controllers\ContractController@show')->name('contractShow')->middleware('auth');
 Route::get('/contract/edit{id}', 'App\Http\Controllers\ContractController@edit')->name('contractEdit')->middleware('auth');
