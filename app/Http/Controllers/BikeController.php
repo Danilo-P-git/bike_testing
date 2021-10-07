@@ -255,13 +255,13 @@ class BikeController extends Controller
             $manutenzione = 0;
         }
         if ($request->bloccoesc=='on'){
-            $bloccata=1;
+            $bloccataEsc=1;
         }else{
-            $bloccata = 0;
+            $bloccataEsc = 0;
         }
         $bike = Bike::find($id);
         $bike->manutenzione = $manutenzione;
-        $bike->bloccata = $bloccata;
+        $bike->bloccataEsc = $bloccataEsc;
         $bike->push();
 
         return redirect()->route('bikeIndex', $bike);

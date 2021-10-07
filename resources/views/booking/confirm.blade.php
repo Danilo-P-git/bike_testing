@@ -42,7 +42,7 @@
                 $CHIAVESEGRETA = 'DC0TYLAMY69IOFXKCR7LPFBY4L6DYKCU'; // Sostituire con il valore fornito da Nexi
 
                 $requestUrl = "https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet";
-                $postUrl = "http://localhost:8000/booking/details";
+                $postUrl = "http://localhost:8000/booking/select";
                 $merchantServerUrl = "http://localhost:8000/booking/done";
 
                 $codTrans = $contract->id;

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Contract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Echo_;
 
 class UserBooking extends Controller
 {
@@ -25,6 +26,7 @@ class UserBooking extends Controller
             
             //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
             $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
+            
         }
         /* dd($categoryId); */
         
@@ -37,7 +39,7 @@ class UserBooking extends Controller
     {
 
 
-        
+        //dd($request);
         $data = $request->all();
         $newData = array();
 
@@ -46,29 +48,35 @@ class UserBooking extends Controller
         // manipolo la request per pulirla e salvarmi un altro array da utilizzare dopo
         
         foreach ($data as $key => $value) {
-
+            
             if ($value == 0) {
                 
             } else {
 
                 $newData[$key] = $value;
-
+                
             }
-
+            
         }
+        
     
 
         // ciclo la request e verifico con il nuovo array le categorie e creo un nuovo array con $key == id categoria && $value == quantita ordianata 
         foreach ($data as $key => $value) {
         
-
+            
             foreach ($newData['category'] as $key2 => $value2) {
+                
                 if ($value2 == $key ) {
                     $categoryArr[$value2] = $value;
+                    
+                    
                 }
+                
             }
 
         }  
+       // dd($categoryArr);
 
 
         
@@ -80,9 +88,9 @@ class UserBooking extends Controller
 
         $arraySplit = explode(' - ', $dataRange);
 
-        $formatCarbonStart = Carbon::createFromFormat('d/m/Y', $arraySplit[0])->format('d-m-Y');
+        $formatCarbonStart = Carbon::createFromFormat('d/m/Y', $arraySplit[0])->format('Y-m-d');
 
-        $formatCarbonEnd = Carbon::createFromFormat('d/m/Y', $arraySplit[1])->format('d-m-Y');
+        $formatCarbonEnd = Carbon::createFromFormat('d/m/Y', $arraySplit[1])->format('Y-m-d');
 
         $inputStartDate = Carbon::parse($formatCarbonStart)->format('Y-m-d');
         $inputEndDate = Carbon::parse($formatCarbonEnd)->format('Y-m-d');
@@ -95,10 +103,12 @@ class UserBooking extends Controller
 
         // Dichiaro i due array delle bici 
         $biciCorretta = array();
+        $bicitemp=array();
         $biciSbagliata= array();
         // Ciclo l'array delle categorie 
+        //dd($categoryArr);
         foreach ($categoryArr as $key => $value) {
-
+            
 
             $category = Category::find($key);
 
@@ -108,13 +118,16 @@ class UserBooking extends Controller
                 ['manutenzione', '=', 0],
                 ['category_id', '=', $key],
             ])->get();
-
+           // array_push($bicitemp,$bikes);
+                
             // 
+            /* $i=0; */
             if (count($bikes) < $value) {
                 return back()->with('message', 'Quantità maggiore delle bici disponibili '.$category->tipo);
             } else {
                 // ciclo le bici trovate
                 foreach ($bikes as $bike) {
+                    
                     // se hanno dei contratti 
                     if (count($bike->contract) > 0) {
                         // 
@@ -126,21 +139,30 @@ class UserBooking extends Controller
                             $contrattoEsistenteEnd = Carbon::createFromFormat('Y-m-d',$contrattoEsistente->data_fine);
 
                             $check1 = $bookingStart->lte($contrattoEsistenteEnd);
+                            
                             $check2 = $bookingEnd->gte($contrattoEsistenteStart);
+                            
 
                             if ($check1 && $check2) {
 
-                                // return back()->with('message', 'Bici non disponibili in quelle date'.$bike->id);
+                                 return back()->with('message', 'Bici non disponibili in quelle date '.$bike->id);
 
                             }   else {
-                                array_push($biciCorretta, $bike);
-        
+                                if (!in_array($bike,$biciCorretta, true)) {
+                                    # code...
+                                    array_push($biciCorretta, $bike);
+                                }
                                 
-        
                             }
+                            
                         }
                     } else {
-                        array_push($biciCorretta, $bike);
+                        if (!in_array($bike,$biciCorretta, true)) {
+                            # code...
+                            array_push($biciCorretta, $bike);
+                        }
+                        
+                        
                         
                         
 
@@ -148,36 +170,46 @@ class UserBooking extends Controller
                 }
             }
         }
-        // dd($biciCorretta);
+        //dd($biciCorretta); //CAPIRE PERCHE MI RIPORTA 2 VOLTE LO STESSO RISULTATO 
         // dichiaro l'array delle bici che selezionerò
         $biciSelezionata = array();
+        
         // dd($categoryArr);
         // ciclo di nuovo l'array delle categorie 
+
+
+        
         foreach ($categoryArr as $key => $value) {
             // dichiaro un contatore per la quantita di bici che debbo trovare 
-            $cont = 1;
             
+            $cont = 0;
             foreach ($biciCorretta as $chiave => $valore) {
+                
+                 //dd($valore);
                 // incremento il contatore di base da 0 a 1 
                 // $cont ++ ;
 
                 $biciSingola = $valore;
-      
+
                 // se la categoria della bici singola è corretta e la quantita ($value) è inferiore o uguale al contatore 
                 // pusho la bici nell'array
 
-                if ($biciSingola->category_id == $key && $cont <= $value) {
+                if ($biciSingola->category_id = $key && $cont <= count($biciCorretta)) {
                     $cont ++;
-                    array_push($biciSelezionata, $biciSingola);
-
+                    if (!in_array($biciSingola,$biciSelezionata, true)) {
+                        # code...
+                        array_push($biciSelezionata, $biciSingola);
+                    }
+                    /* echo "$cont <br>"; */
                     
-
+                    
                 } 
             }
             
         }
+        //dd($biciSelezionata);
 
-        // dd($biciSelezionata);
+         /* dd($biciSelezionata); */
 
         // Gestione Costi
 
@@ -256,6 +288,19 @@ class UserBooking extends Controller
         return view('booking.confirm', compact('contract') );
     }
 
+/*     public function available(Request $request){
+        
+
+        $data=$request['range_date'];
+        $datasplit=explode(" - ",$data);
+        $dataStart=Carbon::createFromFormat('d/m/Y', $datasplit[0])->format('Y-m-d');
+        $dataEnd=Carbon::createFromFormat('d/m/Y', $datasplit[1])->format('Y-m-d');
+        $contractdate=DB::table('contracts')->whereRaw('? between data_inizio and data_fine', [$dataStart,$dataEnd])->get();
+
+
+        dd($contractdate);
+    } */
+
     public function deleteContract(Request $request){
         
         $category = Category::with('bike')->get();
@@ -325,6 +370,9 @@ class UserBooking extends Controller
     }
 
 
+    
+
+
     public function checkBike(Request $request){
         $date1=Carbon::parse($request->start)->format('Y-m-d');
         $date2=Carbon::parse($request->end)->format('Y-m-d');
@@ -338,7 +386,7 @@ class UserBooking extends Controller
             foreach ($contractdate as $key) {
                 
                 $bikeContract=DB::table('bike_contract')
-                ->join('contracts','contracts.id','bike_contract.contract_id')
+                ->join('contracts', 'contracts.id','bike_contract.contract_id')
                 ->join('bikes','bikes.id','=','bike_contract.bike_id')
                 ->get();
             
@@ -357,7 +405,7 @@ class UserBooking extends Controller
                 foreach ($categoryId as $key) {
             
                     //assegno alla chiave l'id della categoria in modo da poter richiamare il dato nella vista, in questo modo avrò un array chiave=>valore dove la chiave è l'id della categoria e il valore è il conteggio delle bici trovate in quella categoria 
-                    $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->where('bloccata','=',0)->count('*');
+                    $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->where('bloccataEsc','=',0)->count('*');
                 }
                 /* return view('bookingSelect', compact('quantity')); */
         return response()->json(["qty"=>$quantity]);

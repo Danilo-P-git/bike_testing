@@ -56,11 +56,15 @@
                                                     $quantity[$key->id]=DB::table('bikes')->where('category_id','=',$key->id)->count('*');
                                                 }
                                             ?>
-                                            <div class="card cat m-auto position-relative "  >
+                                        
+                                            
+                                            <div class="card cat m-auto position-relative">
+                                                
+                                            
                                                 
                                                 {{-- @foreach ($quantity as $item=>$val)
                                                 @if ($item==$cat->id)  --}}
-                                                <p class="m-3 numberqty" id="cat{{$cat->id}}" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);"></p> 
+                                                <p class="m-3 " id="cat{{$cat->id}}" style="font-weight: bold;color:#ce2e30;text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);"></p> 
                                                 {{-- @endif
                                                 @endforeach --}}
                                                 <p class="check position-absolute" style="display: none"><i class="fa fa-check" aria-hidden="true"></i></p>
@@ -103,6 +107,7 @@
                                                 </div>
 
                                             </div>
+                                            
                                             <div class="number-drop" style="display: none">
                                                 <i class="fas fa-shopping-cart" style="color: #ce2e30"><label for="quantity{{$cat->id}}"></label></i>
                                                 <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control" value="0" >
@@ -191,6 +196,7 @@
 
     $('#range_date').on('change', function(){
         
+        
         var data = $(this).val();
         var split = data.split(' - ');
         var startDate = split[0];
@@ -251,6 +257,7 @@
                $.each(respons['qty'],function(id,quantity){
                    $('#cat'+id).text('Disponibilita: '+quantity); 
                 });
+                
             }
         });
     });

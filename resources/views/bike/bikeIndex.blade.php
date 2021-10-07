@@ -253,7 +253,7 @@
     @foreach ($bikes as $bike)
 
     <div class="card m-2" style="width: 18rem; @if ($bike->manutenzione == 1) background-color: red; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif
-        @if ($bike->bloccata == 1) background-color: green; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif">
+        @if ($bike->bloccataEsc == 1) background-color: green; @elseif (isset($bike->temp) && $bike->temp == 1) background-color: yellow; @endif">
         <div class="card-body">
             <h5 class="card-title">{{$bike->name}}</h5>
             @if (isset($bike->temp) && $bike->temp == 1)
@@ -281,7 +281,7 @@
                     <input class="submit" type="submit" hidden>
                 </div>
                 <div class="custom-control custom-switch">
-                    <input name="bloccoesc" type="checkbox" class="custom-control-input" id="bloccoesc{{$bike->id}}" @if($bike->bloccata == 1 ) checked @endif @if(isset($bike->temp) && $bike->temp == 1) disabled @endif onchange="this.form.submit()">
+                    <input name="bloccoesc" type="checkbox" class="custom-control-input" id="bloccoesc{{$bike->id}}" @if($bike->bloccataEsc == 1 ) checked @endif @if(isset($bike->temp) && $bike->temp == 1) disabled @endif onchange="this.form.submit()">
                     <label class="custom-control-label" for="bloccoesc{{$bike->id}}">Attiva Blocco escursionista</label>
                     <input class="submit" type="submit" hidden>
                 </div>
