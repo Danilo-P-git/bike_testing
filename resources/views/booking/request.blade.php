@@ -19,7 +19,7 @@
             <div class="row no-gutters">
             
                
-
+                    
                     {{-- seleziona --}}
                     <div class="col-sm-9 col-12 bg-light shadow pt-2 pl-3">
                             <div class="row justify-content-center">
@@ -39,10 +39,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <p class="text-center"><span style="font-size: 1.5rem; color:#ce2e30">1° selezionare le categorie desiderate<br>2° inserisci la quantita per categoria <br>3° compila il modulo per inoltrare la richiesta</span></p>
                             <div class="row" style="margin-top: 10%">
                                 <div class="col col-md-12">
                                     <div class="row d-flex no-gutters  flex-wrap">
-                                        
                                         @foreach ($category as $cat)
                                         <div class="col pb-5 m-1">
                                             <input type="text" id="idcat" value="idcat_{{$cat->id}}" hidden>
@@ -58,7 +58,7 @@
                                             ?>
                                         
                                             
-                                            <div class="card cat m-auto position-relative">
+                                            <div class="card cat m-auto position-relative" name="bgcolor">
                                                 
                                             
                                                 
@@ -71,7 +71,7 @@
 
                                                 <input class="cat-id" type="number" value="{{$cat->id}}" hidden>
                                                 <input class="id-cat" type="checkbox" name="category[]" id="category" value="{{$cat->id}}" hidden>
-                                                <img class="card-img-top p-3" src="{{asset('storage/'.$cat->cover_image)}}" alt="">
+                                                <img class="card-img-top p-3" src="{{asset('storage/'.$cat->cover_image)}}" alt="" style="border-radius: 50px;">
                                                 <div class="card-body my-n3">
                                                     <h3 class="card-title text-center" style="text-shadow: 2px 5px 3px rgba(150, 150, 150, 0.92);">{{$cat->tipo}}</h3>
 
@@ -81,7 +81,7 @@
                                                             
                                                                 <button class="btn btn-primary pl-5 pr-5 ml-5 drop"  type="button">{{__('payment.page.price')}}</button>
 
-                                                                <button class="btn btn-primary pl-5 pr-5"  type="button">Dettagli</button>
+                                                                <button class="btn btn-primary pl-5 pr-5 drop2"  type="button">Dettagli</button>
 
                                                     
                                                     
@@ -103,14 +103,21 @@
 
                                                     </div>
 
+                                                    <div class="show-drop2" style="display: none">
+                                                        {{$cat->caratteristiche}}
+                                                        <br>
+                                                        <p class="text-center" style="font-size: 1.5rem;">Chiudi</p>
+                                                    </div>
+                                                    
+
                                                     
                                                 </div>
 
                                             </div>
                                             
-                                            <div class="number-drop" style="display: none">
-                                                <i class="fas fa-shopping-cart" style="color: #ce2e30"><label for="quantity{{$cat->id}}"></label></i>
-                                                <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control" value="0" >
+                                            <div class="number-drop text-center mt-4" style="display: none">
+                                                <label for="quantity{{$cat->id}}">Inserire il numero di Bici richiesto per {{$cat->tipo}}</label>
+                                                <input name="{{$cat->id}}" type="number" id="quantity{{$cat->id}}" class="form-control text-center" value="0">
                                             </div>
                                         </div>
                                         @endforeach
@@ -167,7 +174,15 @@
     });
     $('.show-drop').on('click', function (){
         $(this).slideToggle(300);
-    })
+    });
+
+    $('.drop2').on('click', function () {
+        $(this).siblings('.show-drop2').slideToggle(300);
+
+    });
+    $('.show-drop2').on('click', function (){
+        $(this).slideToggle(300);
+    });
 
     $('#range_date').daterangepicker({
         "locale": {
@@ -270,9 +285,12 @@
             if (valueCheckbox.is(':checked')) {
                 valueCheckbox.prop('checked',false)
                 $(this).children('.check').hide();
+                $(this).removeClass('bgcard');
             } else {
                 valueCheckbox.prop('checked',true)
                 $(this).children('.check').show();
+                $(this).addClass('bgcard');
+
                
             }
 

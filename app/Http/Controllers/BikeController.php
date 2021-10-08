@@ -153,7 +153,7 @@ class BikeController extends Controller
                 $category->overprice = $request->overprice;
                 $cover_image = $request->cover_image->storeAs(
                     "images/".$category->tipo,
-                    "image-cat-".$category->tipo.".jpg",
+                    "image-cat-".$category->tipo.".png",
                     "public"
                 );
                 $category->cover_image = $cover_image;
