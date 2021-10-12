@@ -46,6 +46,8 @@
               <a class="btn btn-primary m-1" href="{{route("contractMail", $contract->id)}}">Manda una mail</a>
               <a class="btn btn-secondary m-1" class="sms" href="{{route("contractSms", $contract->id)}}" value="{{$contract->id}}">Manda un sms</a>
               <a class="btn btn-secondary m-1" href="{{route("contractShow", $contract->id)}}">SHOW</a>
+              <a class="btn btn-secondary m-1" href="{{route("contractEdit", $contract->id)}}">EDIT</a>
+              <a class="btn btn-secondary m-1" href="{{route("contractDelete", $contract->id)}}">CANCELLA</a>
             </td>
           </tr>
 

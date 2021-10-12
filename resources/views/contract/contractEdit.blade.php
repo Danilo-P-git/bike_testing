@@ -4,16 +4,21 @@
 <div class="container d-flex flex-column">
     <h1 class="text-center">Contratto n° {{$contract->id}}</h1>
     <h2 class="text-center">Nominativo {{$contract->nome}} {{$contract->cognome}}</h2>
-    <h2>Bici selezionate</h2>
+    <h2 class="ml-n4">Bici selezionate</h2> 
     <ul>
         @foreach ($contract->bike as $bike)
+        <form action="{{route('contractBikeDelete',$contract->id) }}" method="POST">
+            @csrf
+            <input type="text" name="bike_id" value="{{$bike->id}}" hidden>
             <li style="font-size: 1.2rem">{{$bike->name}} <br>
                 <img style="width: 100px" src="{{asset('storage/'.$bike->cover_photo)}}" alt="">
                 <!-- Button trigger modal -->
                 <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modelId">
                   Mostra le altre foto
                 </button>
-                
+                @method('delete')
+                <button type="submit" name="delBike" class="btn btn-danger" value="{{$bike->id}}">X</button>
+            </form>
                 <!-- Modal -->
                 <div class="modal fade" id="modelId" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -42,16 +47,24 @@
             </li>
             @endforeach
         </ul>
+        <a href="{{route('contractBikeChosing', $contract->id)}}"><button class="btn btn-danger">Inserisci bici</button></a>
         <hr>
-        <div class="container-fluid">
+        <div class="container-fluid ml-n5">
             <div class="row">
                 <div class="col-12">
-                <h2 class="ml-n3">Accessori selezionati</h2>
+                <h2>Accessori selezionati</h2>
                 <ul>
-                @foreach ($accessory->accessori as $item)
-                    <li style="font-size: 1.2rem;">{{$item->nome}}</li>
+                @foreach ($contract->accessori as $item)
+                <form action="{{route('contractAccessoryDelete',$contract->id) }}" method="POST">
+                    @csrf
+                    <input type="text" name="accessory_id" value="{{$item->id}}" hidden>
+                    <li style="font-size: 1.2rem">{{$item->nome}}</li>
+                    @method('delete')
+                    <button type="submit" name="delAccessory" class="btn btn-danger" value="{{$item->id}}">X</button>
+                </form>
                 @endforeach
                 </ul> 
+                <a href="{{route('contractBikeChosing', $contract->id)}}"><button class="btn btn-danger">Inserisci Accessori</button></a>
             </div>
             </div>
         </div>
@@ -63,7 +76,10 @@
         <h2 class="ml-n4">Firma</h2>
         <img style="width: 50%;" src="{{asset($contract->sign)}}" alt="">
     @endif
-    <a href="{{route('contractEdit', $contract->id)}}"><button class="btn btn-danger">Modifica</button></a>
+    <a href="{{route('contractIndex')}}"><button class="btn btn-danger">Torna ai contratti</button></a>
 </div>
+
+
+
 
 @endsection

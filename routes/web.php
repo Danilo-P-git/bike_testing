@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Accessory;
+use App\Http\Controllers\AccessoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +26,9 @@ Route::get('/bike/create', 'App\Http\Controllers\BikeController@create')->name('
 Route::post('/bike/store', 'App\Http\Controllers\BikeController@store')->name('bikeStore')->middleware('auth');
 Route::any('/bike/category','App\Http\Controllers\BikeController@category')->name('category')->middleware('auth');
 Route::any('/bike/category{id}','App\Http\Controllers\BikeController@editCategory')->name('editCategory')->middleware('auth');
+Route::any('/accessory',[AccessoryController::class,'index'])->name('indexAccessory');
+Route::any('/accessory/create',[AccessoryController::class,'create'])->name('createAccessory');
+Route::any('/accessory/store',[AccessoryController::class,'store'])->name('StoreAccessory');
 
 Route::get('/bike/edit{id}', 'App\Http\Controllers\BikeController@edit')->name('bikeEdit')->middleware('auth');
 Route::put('/bike/update{id}','App\Http\Controllers\BikeController@update')->name('bikeUpdate')->middleware('auth');
@@ -33,6 +38,10 @@ Route::delete('/bike/delete{id}', 'App\Http\Controllers\BikeController@destroy' 
 Route::get('/contract', 'App\Http\Controllers\ContractController@index')->name('contractIndex')->middleware('auth');
 Route::get('/contract/create', 'App\Http\Controllers\ContractController@create')->name('contractCreate')->middleware('auth');
 Route::post('/contract/store', 'App\Http\Controllers\ContractController@store')->name('contractStore')->middleware('auth');
+Route::get('/contract/update{id}', 'App\Http\Controllers\ContractController@edit')->name('contractEdit')->middleware('auth');
+Route::get('/contract/delete{id}', 'App\Http\Controllers\ContractController@delete')->name('contractDelete')->middleware('auth');
+Route::delete('/contract/accessory/delete{id}', 'App\Http\Controllers\ContractController@updateAccessory')->name('contractAccessoryDelete')->middleware('auth');
+Route::delete('/contract/bike/delete{id}', 'App\Http\Controllers\ContractController@updateBike')->name('contractBikeDelete')->middleware('auth');
 Route::any('/contract/bike{id}', 'App\Http\Controllers\ContractController@bikeChosing' )->name('contractBikeChosing')->middleware('auth');
 Route::any('/contract/bike/storing{id}','App\Http\Controllers\ContractController@bikeStoring' )->name('contractBikeStoring')->middleware('auth');
 Route::any('/contract/signature{id}', 'App\Http\Controllers\ContractController@signature')->name('contractSignature');

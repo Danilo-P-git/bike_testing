@@ -11,9 +11,10 @@
         </div>
         <div class="col">
           <a class="btn  btn_menu shadow m-auto d-flex" href="{{route('contractIndex')}}"><span class="m-auto">CONTRATTI</span></a>
-            
-  
         </div>
+        <div class="col">
+            <a class="btn  btn_menu shadow m-auto d-flex" href="{{route('indexAccessory')}}"><span class="m-auto">ACCESSORI</span></a>
+          </div>
     </div>
     
 </div>

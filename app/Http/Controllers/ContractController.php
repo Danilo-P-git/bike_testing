@@ -1,17 +1,19 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Bike;
-use App\Models\Contract;
-use App\Models\Category;
-use App\Models\Photo;
-use Carbon\Carbon;
-use App\Mail\SendNewMail;
-use Illuminate\Support\Facades\Mail;
 use PDF;
-use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use App\Models\Bike;
+use App\Models\Photo;
+use App\Models\Category;
+use App\Models\Contract;
+use App\Mail\SendNewMail;
+use App\Models\Accessory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 // set_time_limit(300);
 class ContractController extends Controller
 {
@@ -124,7 +126,8 @@ class ContractController extends Controller
     public function bikeChosing($id)
     {
         // $today = Carbon::now()->format('Y-m-d');
-
+        $accessori=Accessory::all();
+        
         $contract = Contract::with('bike')->find($id);
         // dd($contract->data_inizio);
         $bikes = Bike::with('category')->where([
@@ -184,20 +187,42 @@ class ContractController extends Controller
         // dd($biciCorretteCollection);
 
 
-        return view('contract.contractBikeChosing', compact('availables','contract'));
+        return view('contract.contractBikeChosing', compact('availables','contract','accessori'));
     }
 
     public function bikeStoring(Request $request, $id){
 
-        // dd($request);
-
+        //dd($id);
+        
+        $accessory= Contract::with('accessori')->find($id);
+        //dd($accessory);
         $contract = Contract::with('bike.category')->find($id);
+       // dd($contract);
+        
+        $accessori=$request->accessorio;
 
 
-
-        foreach ($request->bike as $bike) {
-            $contract->bike()->attach($bike);
+        if ($request->bike==0) {
+            
+        }else {
+            
+            foreach ($request->bike as $bike) {
+                $contract->bike()->attach($bike);
+                //dd($contract);
+            }
         }
+        if ($accessori==0) {
+            
+        }else {
+            foreach ($accessori as $accessorio) {
+                // dd($accessorio);
+                 $accessory->accessori()->attach($accessorio);
+                 //dd($accessory);
+             }
+        }
+        
+
+        
         $contract->load('bike');
        
         // dd($contract);
@@ -347,11 +372,12 @@ class ContractController extends Controller
     
     public function show($id)
     {
-
-
+        
+        $accessory=Contract::with('accessori')->find($id);
+        //dd($accessory);
         $contract = Contract::with('bike.photo')->find($id);
 
-        return view('contract.contractShow', compact('contract'));
+        return view('contract.contractShow', compact('contract','accessory'));
     }
 
     public function generaPdf($id)
@@ -386,5 +412,44 @@ class ContractController extends Controller
         return $pdf->download($fileName);
     }
 
+    public function edit($id){
 
+        $contract=Contract::find($id);
+        
+
+        return view('contract.contractEdit',compact('contract'));
+    }
+
+    public function updateAccessory(Request $request, $id){
+
+        //dd($request);
+        $idAccessory=$request->accessory_id;
+        $accessoryContract=Contract::with('accessori')->find($id);
+        //dd($accessoryContract);
+        foreach ($accessoryContract->accessori as $key) {
+            $accessoryDel=DB::table('accessory_contract')->where('accessory_id','=', $idAccessory)->delete();
+        }
+        //dd($bikeDel);
+        return redirect()->back();
+    }
+    public function updateBike(Request $request, $id){
+
+        //dd($request);
+        $idBike=$request->bike_id;
+        $bikeContract=Contract::with('bike')->find($id);
+        foreach ($bikeContract->bike as $key) {
+            $bikeDel=DB::table('bike_contract')->where('bike_id','=', $idBike)->delete();
+            $bikebloccataFalse=DB::table('bikes')->where('id','=', $idBike)->update(['bloccata'=>0]);
+
+        }
+        //dd($bikeDel);
+        return redirect()->back();
+    }
+
+    public function delete($id){
+
+        $contract=Contract::find($id)->delete();
+
+        return redirect()->back();
+    }
 }

@@ -19,6 +19,7 @@ class Bike extends Model
         'manutenzione',
         'contract_id',
         'category_id',
+        'accessory_id',
 
 
     ];
@@ -35,5 +36,9 @@ class Bike extends Model
     public function photo()
     {
         return $this->hasMany(Photo::class);
+    }
+    public function accessori()
+    {
+        return $this->belongsToMany(Accessory::class);
     }
 }
